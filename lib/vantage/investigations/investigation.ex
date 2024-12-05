@@ -10,6 +10,8 @@ defmodule Vantage.Investigations.Investigation do
     field :description, :string
     field :longitude, :float
     field :latitude, :float
+    has_many :investigation_collaborators, Vantage.Investigations.InvestigationCollaborator
+    has_many :projections, Vantage.Projections.Projection
 
     timestamps(type: :utc_datetime)
   end
@@ -18,6 +20,6 @@ defmodule Vantage.Investigations.Investigation do
   def changeset(investigation, attrs) do
     investigation
     |> cast(attrs, [:name, :description, :longitude, :latitude, :time])
-    |> validate_required([:name, :description, :longitude, :latitude, :time])
+    |> validate_required([:name, :longitude, :latitude, :time])
   end
 end

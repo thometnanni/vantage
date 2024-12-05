@@ -11,7 +11,8 @@ defmodule Vantage.Projections.Projection do
     field :file, :string
     field :layers, {:array, Ecto.Enum}, values: [:terrain, :buildings, :plane]
     field :orthographic, :boolean, default: false
-    field :investigation_id, :binary_id
+    belongs_to :investigation, Vantage.Investigations.Investigation
+    has_many :keyframes, Vantage.Projections.Keyframe
 
     timestamps(type: :utc_datetime)
   end
@@ -19,7 +20,7 @@ defmodule Vantage.Projections.Projection do
   @doc false
   def changeset(projection, attrs) do
     projection
-    |> cast(attrs, [:name, :type, :file, :layers, :orthographic, :time])
-    |> validate_required([:name, :type, :file, :layers, :orthographic, :time])
+    |> cast(attrs, [:name, :type, :file, :layers, :orthographic, :time, :investigation_id])
+    |> validate_required([:name, :type, :file, :layers, :orthographic, :time, :investigation_id])
   end
 end

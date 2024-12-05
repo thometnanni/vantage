@@ -145,8 +145,9 @@ defmodule Vantage.Investigations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_investigation_collaborator(attrs \\ %{}) do
-    %InvestigationCollaborator{}
+  def create_investigation_collaborator(user, attrs \\ %{}) do
+    user
+    |> Ecto.build_assoc(:investigation_collaborators)
     |> InvestigationCollaborator.changeset(attrs)
     |> Repo.insert()
   end
@@ -163,7 +164,10 @@ defmodule Vantage.Investigations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_investigation_collaborator(%InvestigationCollaborator{} = investigation_collaborator, attrs) do
+  def update_investigation_collaborator(
+        %InvestigationCollaborator{} = investigation_collaborator,
+        attrs
+      ) do
     investigation_collaborator
     |> InvestigationCollaborator.changeset(attrs)
     |> Repo.update()
@@ -194,7 +198,10 @@ defmodule Vantage.Investigations do
       %Ecto.Changeset{data: %InvestigationCollaborator{}}
 
   """
-  def change_investigation_collaborator(%InvestigationCollaborator{} = investigation_collaborator, attrs \\ %{}) do
+  def change_investigation_collaborator(
+        %InvestigationCollaborator{} = investigation_collaborator,
+        attrs \\ %{}
+      ) do
     InvestigationCollaborator.changeset(investigation_collaborator, attrs)
   end
 end

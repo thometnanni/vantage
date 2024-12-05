@@ -10,7 +10,7 @@ defmodule Vantage.Projections.Keyframe do
     field :range, {:array, :float}
     field :rotation, {:array, :float}
     field :fov, :float
-    field :projection_id, :binary_id
+    belongs_to :projection, Vantage.Projections.Projection
 
     timestamps(type: :utc_datetime)
   end
@@ -18,7 +18,7 @@ defmodule Vantage.Projections.Keyframe do
   @doc false
   def changeset(keyframe, attrs) do
     keyframe
-    |> cast(attrs, [:time, :position, :rotation, :range, :fov])
-    |> validate_required([:time, :position, :rotation, :range, :fov])
+    |> cast(attrs, [:time, :position, :rotation, :range, :fov, :projection_id])
+    |> validate_required([:time, :position, :rotation, :range, :fov, :projection_id])
   end
 end
