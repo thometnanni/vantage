@@ -21,4 +21,18 @@ defmodule Vantage.InvestigationsFixtures do
 
     investigation
   end
+
+  @doc """
+  Generate a investigation_collaborator.
+  """
+  def investigation_collaborator_fixture(attrs \\ %{}) do
+    {:ok, investigation_collaborator} =
+      attrs
+      |> Enum.into(%{
+        role: "writer"
+      })
+      |> Vantage.Investigations.create_investigation_collaborator()
+
+    investigation_collaborator
+  end
 end
