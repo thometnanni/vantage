@@ -86,4 +86,66 @@ defmodule Vantage.ProjectionsTest do
       assert %Ecto.Changeset{} = Projections.change_projection(projection)
     end
   end
+
+  describe "keyframes" do
+    alias Vantage.Projections.Keyframe
+
+    import Vantage.ProjectionsFixtures
+
+    @invalid_attrs %{position: nil, time: nil, range: nil, rotation: nil, fov: nil}
+
+    test "list_keyframes/0 returns all keyframes" do
+      keyframe = keyframe_fixture()
+      assert Projections.list_keyframes() == [keyframe]
+    end
+
+    test "get_keyframe!/1 returns the keyframe with given id" do
+      keyframe = keyframe_fixture()
+      assert Projections.get_keyframe!(keyframe.id) == keyframe
+    end
+
+    test "create_keyframe/1 with valid data creates a keyframe" do
+      valid_attrs = %{position: [], time: 120.5, range: [], rotation: [], fov: 120.5}
+
+      assert {:ok, %Keyframe{} = keyframe} = Projections.create_keyframe(valid_attrs)
+      assert keyframe.position == []
+      assert keyframe.time == 120.5
+      assert keyframe.range == []
+      assert keyframe.rotation == []
+      assert keyframe.fov == 120.5
+    end
+
+    test "create_keyframe/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Projections.create_keyframe(@invalid_attrs)
+    end
+
+    test "update_keyframe/2 with valid data updates the keyframe" do
+      keyframe = keyframe_fixture()
+      update_attrs = %{position: [], time: 456.7, range: [], rotation: [], fov: 456.7}
+
+      assert {:ok, %Keyframe{} = keyframe} = Projections.update_keyframe(keyframe, update_attrs)
+      assert keyframe.position == []
+      assert keyframe.time == 456.7
+      assert keyframe.range == []
+      assert keyframe.rotation == []
+      assert keyframe.fov == 456.7
+    end
+
+    test "update_keyframe/2 with invalid data returns error changeset" do
+      keyframe = keyframe_fixture()
+      assert {:error, %Ecto.Changeset{}} = Projections.update_keyframe(keyframe, @invalid_attrs)
+      assert keyframe == Projections.get_keyframe!(keyframe.id)
+    end
+
+    test "delete_keyframe/1 deletes the keyframe" do
+      keyframe = keyframe_fixture()
+      assert {:ok, %Keyframe{}} = Projections.delete_keyframe(keyframe)
+      assert_raise Ecto.NoResultsError, fn -> Projections.get_keyframe!(keyframe.id) end
+    end
+
+    test "change_keyframe/1 returns a keyframe changeset" do
+      keyframe = keyframe_fixture()
+      assert %Ecto.Changeset{} = Projections.change_keyframe(keyframe)
+    end
+  end
 end

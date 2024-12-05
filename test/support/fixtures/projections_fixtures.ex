@@ -22,4 +22,22 @@ defmodule Vantage.ProjectionsFixtures do
 
     projection
   end
+
+  @doc """
+  Generate a keyframe.
+  """
+  def keyframe_fixture(attrs \\ %{}) do
+    {:ok, keyframe} =
+      attrs
+      |> Enum.into(%{
+        fov: 120.5,
+        position: [],
+        range: [],
+        rotation: [],
+        time: 120.5
+      })
+      |> Vantage.Projections.create_keyframe()
+
+    keyframe
+  end
 end
