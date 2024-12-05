@@ -10,8 +10,11 @@ defmodule Vantage.Repo.Migrations.CreateProjections do
       add :layers, {:array, :string}
       add :orthographic, :boolean, default: false, null: false
       add :time, :float
+      add :investigation_id, references(:investigations, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end
+
+    create index(:projections, [:investigation_id])
   end
 end

@@ -11,6 +11,7 @@ defmodule Vantage.Projections.Projection do
     field :file, :string
     field :layers, {:array, Ecto.Enum}, values: [:terrain, :buildings, :plane]
     field :orthographic, :boolean, default: false
+    field :investigation_id, :binary_id
 
     timestamps(type: :utc_datetime)
   end
