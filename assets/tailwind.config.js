@@ -14,7 +14,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: "#FD4F00",
+        brand: "#00FF00",
+      },
+      fontFamily: {
+        brand: ["Space Grotesk", "sans-serif"]
+      },
+      fontWeight: {
+        regular: "normal",
+        bold: "bold"
       }
     },
   },

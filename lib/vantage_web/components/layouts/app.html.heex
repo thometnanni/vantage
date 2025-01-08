@@ -1,32 +1,78 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
-      </p>
-    </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
-    </div>
+<header class="flex justify-between items-center px-3 py-3 bg-gray-100">
+  <div class="flex relative">
+    <a href={~p"/"} class="text-gray-900 font-brand px-2 rounded hover:bg-brand">
+      Vantage
+    </a>
+  </div>
+  <div class="flex relative">
+    <button
+      class="px-2 flex items-center gap-1 text-gray-900 rounded hover:bg-brand"
+      type="button"
+      id="user-menu-button"
+      phx-click={VantageWeb.Layouts.App.toggle_user_menu()}
+    >
+      <%= if @current_user do %>
+        <%= @current_user.email %>
+      <% else %>
+        anonymous
+      <% end %>
+      <svg width="6" height="4" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 4L0 0H6L3 4Z" fill="black" />
+      </svg>
+    </button>
   </div>
 </header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
-  </div>
+<div
+  id="user-menu"
+  class="absolute right-0 w-40 bg-gray-100"
+  hidden
+  phx-click-away={VantageWeb.Layouts.App.toggle_user_menu()}
+>
+  <%= if @current_user do %>
+    <.link
+      href={~p"/users/settings"}
+      class="menu-item"
+      role="menuitem"
+      tabindex="-1"
+      method="get"
+      id="user-menu-item-0"
+    >
+      Settings
+    </.link>
+    <.link
+      href={~p"/users/log_out"}
+      class="menu-item"
+      role="menuitem"
+      tabindex="-1"
+      method="delete"
+      id="user-menu-item-1"
+    >
+      Sign out
+    </.link>
+  <% else %>
+    <.link
+      href={~p"/users/log_in"}
+      class="menu-item"
+      role="menuitem"
+      tabindex="-1"
+      method="get"
+      id="user-menu-item-0"
+    >
+      Sign in
+    </.link>
+    <.link
+      href={~p"/users/register"}
+      class="menu-item"
+      role="menuitem"
+      tabindex="-1"
+      method="get"
+      id="user-menu-item-1"
+    >
+      Register
+    </.link>
+  <% end %>
+</div>
+<main>
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
 </main>
