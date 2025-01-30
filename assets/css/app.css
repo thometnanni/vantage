@@ -19,5 +19,13 @@
 }
 
 .menu-item:hover {
-  @apply bg-brand;
+  @apply hover:bg-brand;
+}
+
+.button-primary {
+  @apply bg-brand text-gray-900;
+}
+
+.button-primary:hover {
+  @apply hover:bg-brand-dark;
 }

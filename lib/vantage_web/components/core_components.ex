@@ -17,7 +17,8 @@ defmodule VantageWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import VantageWeb.Gettext
+  # import VantageWeb.Gettext
+  use Gettext, backend: VantageWeb.Gettext
 
   @doc """
   Renders a modal.

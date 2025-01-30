@@ -2,6 +2,7 @@ defmodule Vantage.Investigations do
   @moduledoc """
   The Investigations context.
   """
+  require Logger
 
   import Ecto.Query, warn: false
   alias Vantage.Repo
@@ -49,8 +50,16 @@ defmodule Vantage.Investigations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_investigation(attrs \\ %{}) do
-    %Investigation{}
+  def create_investigation(user, attrs \\ %{}) do
+    # %Investigation{}
+    # |> Investigation.changeset(attrs)
+    # |> Repo.insert()
+
+    Logger.debug(" –––––– TADA –––––")
+    Logger.debug(attrs)
+
+    user
+    |> Ecto.build_assoc(:investigations)
     |> Investigation.changeset(attrs)
     |> Repo.insert()
   end
