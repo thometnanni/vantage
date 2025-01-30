@@ -1,5 +1,5 @@
 <div class="flex">Investigation</div>
-<.form for={@form}>
+<.simple_form for={@form}>
   <div class="justify center px-28 w-full space-y-4 mb-10">
     <.input field={@form[:name]} placeholder="Name" autocomplete="off" />
     <.input field={@form[:description]} placeholder="Description" autocomplete="off" />
@@ -10,4 +10,4 @@
       <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
     </div>
   </div>
-</.form>
+</.simple_form>
