@@ -12,9 +12,24 @@
       phx-submit="save"
       id="investigation-form"
     >
-      <.input field={@changeset[:name]} label="Title" value={@investigation.name} />
-      <.input field={@changeset[:description]} label="Description" value={@investigation.description} />
-      <.input field={@changeset[:time]} label="Time" value={@investigation.time} />
+      <.input field={@changeset[:name]} label="Title" />
+      <.input field={@changeset[:description]} label="Description" />
+      <.input field={@changeset[:time]} label="Time" type="datetime-local" />
+
+      <div class="flex gap-2">
+        <.input
+          field={@changeset[:longitude]}
+          type="number"
+          label="Longitude"
+          step="any"
+        />
+        <.input
+          field={@changeset[:latitude]}
+          type="number"
+          label="Latitude"
+          step="any"
+        />
+    </div>
     </.simple_form>
   </div>
 </div>
