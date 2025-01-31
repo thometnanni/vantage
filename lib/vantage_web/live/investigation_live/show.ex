@@ -39,10 +39,13 @@ defmodule VantageWeb.InvestigationLive.Show do
   @impl true
   def handle_event("save", %{"investigation" => investigation_params}, socket) do
     case Investigations.update_investigation(socket.assigns.investigation, investigation_params) do
-      {:ok, _investigation} ->
+      {:ok, investigation} ->
         changeset = Investigations.change_investigation(%Investigation{})
         {:noreply, socket
-        |> assign(:form, to_form(changeset))}
+        |> assign(:form, to_form(changeset))
+        |> assign(:investigation, investigation)
+        # |> put_flash(:info, "Investigation updated successfully")
+      }
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket
