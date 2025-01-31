@@ -6,7 +6,7 @@ defmodule Vantage.Investigations.Investigation do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "investigations" do
-    field :name, :string, default: "Untitled Investigation"
+    field :name, :string, default: "Untitled"
     field :time, :utc_datetime_usec
     field :description, :string
     field :longitude, :float
