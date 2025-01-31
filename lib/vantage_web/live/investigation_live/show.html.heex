@@ -1,0 +1,20 @@
+<div class="font-brand grid grid-cols-[1fr_250px] h-full">
+  <div class="flex flex-col">
+    <div id="renderer" class="flex-grow"></div>
+    <div id="timeline" class="h-36 bg-blue-200">
+      Timeline
+    </div>
+  </div>
+  <div id="inspector" class="w-[250px] h-full bg-teal-200">
+     <.simple_form
+      for={@changeset}
+      phx-change="save"
+      phx-submit="save"
+      id="investigation-form"
+    >
+      <.input field={@changeset[:name]} label="Title" value={@investigation.name} />
+      <.input field={@changeset[:description]} label="Description" value={@investigation.description} />
+      <.input field={@changeset[:time]} label="Time" value={@investigation.time} />
+    </.simple_form>
+  </div>
+</div>

@@ -5,6 +5,6 @@ defmodule VantageWeb.PageController do
     # The home page is often custom made,
     # so skip the default app layout.
     # render(conn, :home)
-    redirect(conn, to: "/investigations/create")
+    redirect(conn, to: "/investigations")
   end
 end

@@ -1,8 +1,16 @@
+<div class="h-screen flex flex-col">
 <header class="flex justify-between items-center px-3 py-3 bg-gray-100">
   <div class="flex relative">
     <a href={~p"/"} class="text-gray-900 font-brand px-2 rounded hover:bg-brand">
       Vantage
     </a>
+    <%= if @investigation && @investigation.name do %>
+    •
+    <div class="text-gray-900 font-brand px-2 outline-none">
+      { @investigation.name }
+    </div>
+    <% end %>
+    
   </div>
   <div class="flex relative">
     <button
@@ -72,7 +80,8 @@
     </.link>
   <% end %>
 </div>
-<main>
+<main class="h-full">
   <.flash_group flash={@flash} />
   <%= @inner_content %>
 </main>
+</div>

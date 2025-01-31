@@ -67,6 +67,7 @@ defmodule VantageWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{VantageWeb.UserAuth, :ensure_authenticated}] do
       live "/investigations", InvestigationLive.Index, :index
+      live "/investigations/:id", InvestigationLive.Show, :show
       live "/investigations/create", InvestigationCreateLive
 
       live "/users/settings", UserSettingsLive, :edit

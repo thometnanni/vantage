@@ -23,9 +23,9 @@
 }
 
 .button-primary {
-  @apply bg-brand text-gray-900;
+  @apply bg-gray-200 text-gray-900 font-brand;
 }
 
 .button-primary:hover {
-  @apply hover:bg-brand-dark;
+  @apply hover:bg-brand;
 }
