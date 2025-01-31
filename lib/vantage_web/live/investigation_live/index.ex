@@ -74,6 +74,8 @@ defmodule VantageWeb.InvestigationLive.Index do
           socket
           |> stream_insert(:investigations, formatted_investigation)
           |> put_flash(:info, "New investigation created successfully")
+          |> push_navigate(to: ~p"/investigations/#{investigation.id}")
+
         }
 
       {:error, _err} ->
