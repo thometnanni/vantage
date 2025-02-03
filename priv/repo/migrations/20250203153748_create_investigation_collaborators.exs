@@ -5,8 +5,8 @@ defmodule Vantage.Repo.Migrations.CreateInvestigationCollaborators do
     create table(:investigation_collaborators, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :role, :string
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
-      add :investigation_id, references(:investigations, on_delete: :nothing, type: :binary_id)
+      add :user_id, references(:users, on_delete: :delete_all, type: :binary_id)
+      add :investigation_id, references(:investigations, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end

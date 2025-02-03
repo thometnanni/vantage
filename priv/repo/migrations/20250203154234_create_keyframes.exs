@@ -9,7 +9,7 @@ defmodule Vantage.Repo.Migrations.CreateKeyframes do
       add :rotation, {:array, :float}
       add :far, :float
       add :fov, :float
-      add :projection_id, references(:projections, on_delete: :nothing, type: :binary_id)
+      add :projection_id, references(:projections, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end

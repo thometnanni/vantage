@@ -8,7 +8,7 @@ defmodule Vantage.Repo.Migrations.CreateProjections do
       add :file, :string
       add :orthographic, :boolean, default: false, null: false
       add :time, :float
-      add :investigation_id, references(:investigations, on_delete: :nothing, type: :binary_id)
+      add :investigation_id, references(:investigations, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end

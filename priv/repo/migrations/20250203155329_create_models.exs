@@ -6,7 +6,7 @@ defmodule Vantage.Repo.Migrations.CreateModels do
       add :id, :binary_id, primary_key: true
       add :name, :string
       add :file, :string
-      add :investigation_id, references(:investigations, on_delete: :nothing, type: :binary_id)
+      add :investigation_id, references(:investigations, on_delete: :delete_all, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end
