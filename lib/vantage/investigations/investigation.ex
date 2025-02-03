@@ -5,7 +5,7 @@ defmodule Vantage.Investigations.Investigation do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "investigations" do
-    field :name, :string
+    field :name, :string, default: "Untitled"
     field :time, :utc_datetime_usec
     field :description, :string
     field :longitude, :float
@@ -21,6 +21,6 @@ defmodule Vantage.Investigations.Investigation do
   def changeset(investigation, attrs) do
     investigation
     |> cast(attrs, [:name, :description, :longitude, :latitude, :time])
-    |> validate_required([:name, :description, :longitude, :latitude, :time])
+    |> validate_required([:name])
   end
 end
