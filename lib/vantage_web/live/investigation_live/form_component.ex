@@ -23,7 +23,7 @@ defmodule VantageWeb.InvestigationLive.FormComponent do
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />
         <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
-        <.input field={@form[:time]} type="text" label="Time" />
+        <.input field={@form[:time]} type="text" label="Time" type="datetime-local" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Investigation</.button>
         </:actions>
@@ -44,7 +44,9 @@ defmodule VantageWeb.InvestigationLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"investigation" => investigation_params}, socket) do
-    changeset = Investigations.change_investigation(socket.assigns.investigation, investigation_params)
+    changeset =
+      Investigations.change_investigation(socket.assigns.investigation, investigation_params)
+
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
