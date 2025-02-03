@@ -9,7 +9,8 @@ defmodule Vantage.Projections.Projection do
     field :time, :float
     field :file, :string
     field :orthographic, :boolean, default: false
-    field :investigation_id, :binary_id
+    belongs_to :investigation, Vantage.Investigations.Investigation
+    has_many :keyframes, Vantage.Keyframes.Keyframe
 
     timestamps(type: :utc_datetime)
   end
@@ -17,7 +18,7 @@ defmodule Vantage.Projections.Projection do
   @doc false
   def changeset(projection, attrs) do
     projection
-    |> cast(attrs, [:name, :file, :orthographic, :time])
-    |> validate_required([:name, :file, :orthographic, :time])
+    |> cast(attrs, [:name, :file, :orthographic, :time, :investigation_id])
+    |> validate_required([:name, :file, :orthographic, :time, :investigation_id])
   end
 end

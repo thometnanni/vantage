@@ -7,7 +7,7 @@ defmodule Vantage.Models.Model do
   schema "models" do
     field :name, :string
     field :file, :string
-    field :investigation_id, :binary_id
+    belongs_to :investigation, Vantage.Investigations.Investigation
 
     timestamps(type: :utc_datetime)
   end
@@ -15,7 +15,7 @@ defmodule Vantage.Models.Model do
   @doc false
   def changeset(model, attrs) do
     model
-    |> cast(attrs, [:name, :file])
-    |> validate_required([:name, :file])
+    |> cast(attrs, [:name, :file, :investigation_id])
+    |> validate_required([:name, :file, :investigation_id])
   end
 end

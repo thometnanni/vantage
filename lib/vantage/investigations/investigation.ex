@@ -10,6 +10,9 @@ defmodule Vantage.Investigations.Investigation do
     field :description, :string
     field :longitude, :float
     field :latitude, :float
+    has_many :investigation_collaborators, Vantage.Investigations.InvestigationCollaborator
+    has_many :models, Vantage.Models.Model
+    has_many :projections, Vantage.Projections.Projection
 
     timestamps(type: :utc_datetime)
   end
