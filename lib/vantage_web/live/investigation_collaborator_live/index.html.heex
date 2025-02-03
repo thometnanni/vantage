@@ -1,0 +1,41 @@
+<.header>
+  Listing Investigation collaborators
+  <:actions>
+    <.link patch={~p"/investigation_collaborators/new"}>
+      <.button>New Investigation collaborator</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="investigation_collaborators"
+  rows={@streams.investigation_collaborators}
+  row_click={fn {_id, investigation_collaborator} -> JS.navigate(~p"/investigation_collaborators/#{investigation_collaborator}") end}
+>
+  <:col :let={{_id, investigation_collaborator}} label="Role">{investigation_collaborator.role}</:col>
+  <:action :let={{_id, investigation_collaborator}}>
+    <div class="sr-only">
+      <.link navigate={~p"/investigation_collaborators/#{investigation_collaborator}"}>Show</.link>
+    </div>
+    <.link patch={~p"/investigation_collaborators/#{investigation_collaborator}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, investigation_collaborator}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: investigation_collaborator.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="investigation_collaborator-modal" show on_cancel={JS.patch(~p"/investigation_collaborators")}>
+  <.live_component
+    module={VantageWeb.InvestigationCollaboratorLive.FormComponent}
+    id={@investigation_collaborator.id || :new}
+    title={@page_title}
+    action={@live_action}
+    investigation_collaborator={@investigation_collaborator}
+    patch={~p"/investigation_collaborators"}
+  />
+</.modal>

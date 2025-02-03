@@ -1,0 +1,45 @@
+<.header>
+  Listing Investigations
+  <:actions>
+    <.link patch={~p"/investigations/new"}>
+      <.button>New Investigation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="investigations"
+  rows={@streams.investigations}
+  row_click={fn {_id, investigation} -> JS.navigate(~p"/investigations/#{investigation}") end}
+>
+  <:col :let={{_id, investigation}} label="Name">{investigation.name}</:col>
+  <:col :let={{_id, investigation}} label="Description">{investigation.description}</:col>
+  <:col :let={{_id, investigation}} label="Longitude">{investigation.longitude}</:col>
+  <:col :let={{_id, investigation}} label="Latitude">{investigation.latitude}</:col>
+  <:col :let={{_id, investigation}} label="Time">{investigation.time}</:col>
+  <:action :let={{_id, investigation}}>
+    <div class="sr-only">
+      <.link navigate={~p"/investigations/#{investigation}"}>Show</.link>
+    </div>
+    <.link patch={~p"/investigations/#{investigation}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, investigation}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: investigation.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="investigation-modal" show on_cancel={JS.patch(~p"/investigations")}>
+  <.live_component
+    module={VantageWeb.InvestigationLive.FormComponent}
+    id={@investigation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    investigation={@investigation}
+    patch={~p"/investigations"}
+  />
+</.modal>

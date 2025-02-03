@@ -1,0 +1,44 @@
+<.header>
+  Listing Projections
+  <:actions>
+    <.link patch={~p"/projections/new"}>
+      <.button>New Projection</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="projections"
+  rows={@streams.projections}
+  row_click={fn {_id, projection} -> JS.navigate(~p"/projections/#{projection}") end}
+>
+  <:col :let={{_id, projection}} label="Name">{projection.name}</:col>
+  <:col :let={{_id, projection}} label="File">{projection.file}</:col>
+  <:col :let={{_id, projection}} label="Orthographic">{projection.orthographic}</:col>
+  <:col :let={{_id, projection}} label="Time">{projection.time}</:col>
+  <:action :let={{_id, projection}}>
+    <div class="sr-only">
+      <.link navigate={~p"/projections/#{projection}"}>Show</.link>
+    </div>
+    <.link patch={~p"/projections/#{projection}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, projection}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: projection.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="projection-modal" show on_cancel={JS.patch(~p"/projections")}>
+  <.live_component
+    module={VantageWeb.ProjectionLive.FormComponent}
+    id={@projection.id || :new}
+    title={@page_title}
+    action={@live_action}
+    projection={@projection}
+    patch={~p"/projections"}
+  />
+</.modal>

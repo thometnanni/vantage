@@ -1,0 +1,45 @@
+<.header>
+  Listing Keyframes
+  <:actions>
+    <.link patch={~p"/keyframes/new"}>
+      <.button>New Keyframe</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="keyframes"
+  rows={@streams.keyframes}
+  row_click={fn {_id, keyframe} -> JS.navigate(~p"/keyframes/#{keyframe}") end}
+>
+  <:col :let={{_id, keyframe}} label="Time">{keyframe.time}</:col>
+  <:col :let={{_id, keyframe}} label="Position">{keyframe.position}</:col>
+  <:col :let={{_id, keyframe}} label="Rotation">{keyframe.rotation}</:col>
+  <:col :let={{_id, keyframe}} label="Far">{keyframe.far}</:col>
+  <:col :let={{_id, keyframe}} label="Fov">{keyframe.fov}</:col>
+  <:action :let={{_id, keyframe}}>
+    <div class="sr-only">
+      <.link navigate={~p"/keyframes/#{keyframe}"}>Show</.link>
+    </div>
+    <.link patch={~p"/keyframes/#{keyframe}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, keyframe}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: keyframe.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="keyframe-modal" show on_cancel={JS.patch(~p"/keyframes")}>
+  <.live_component
+    module={VantageWeb.KeyframeLive.FormComponent}
+    id={@keyframe.id || :new}
+    title={@page_title}
+    action={@live_action}
+    keyframe={@keyframe}
+    patch={~p"/keyframes"}
+  />
+</.modal>

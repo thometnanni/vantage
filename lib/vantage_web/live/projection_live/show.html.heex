@@ -1,0 +1,29 @@
+<.header>
+  Projection {@projection.id}
+  <:subtitle>This is a projection record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/projections/#{@projection}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit projection</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@projection.name}</:item>
+  <:item title="File">{@projection.file}</:item>
+  <:item title="Orthographic">{@projection.orthographic}</:item>
+  <:item title="Time">{@projection.time}</:item>
+</.list>
+
+<.back navigate={~p"/projections"}>Back to projections</.back>
+
+<.modal :if={@live_action == :edit} id="projection-modal" show on_cancel={JS.patch(~p"/projections/#{@projection}")}>
+  <.live_component
+    module={VantageWeb.ProjectionLive.FormComponent}
+    id={@projection.id}
+    title={@page_title}
+    action={@live_action}
+    projection={@projection}
+    patch={~p"/projections/#{@projection}"}
+  />
+</.modal>

@@ -1,0 +1,30 @@
+<.header>
+  Keyframe {@keyframe.id}
+  <:subtitle>This is a keyframe record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/keyframes/#{@keyframe}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit keyframe</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Time">{@keyframe.time}</:item>
+  <:item title="Position">{@keyframe.position}</:item>
+  <:item title="Rotation">{@keyframe.rotation}</:item>
+  <:item title="Far">{@keyframe.far}</:item>
+  <:item title="Fov">{@keyframe.fov}</:item>
+</.list>
+
+<.back navigate={~p"/keyframes"}>Back to keyframes</.back>
+
+<.modal :if={@live_action == :edit} id="keyframe-modal" show on_cancel={JS.patch(~p"/keyframes/#{@keyframe}")}>
+  <.live_component
+    module={VantageWeb.KeyframeLive.FormComponent}
+    id={@keyframe.id}
+    title={@page_title}
+    action={@live_action}
+    keyframe={@keyframe}
+    patch={~p"/keyframes/#{@keyframe}"}
+  />
+</.modal>

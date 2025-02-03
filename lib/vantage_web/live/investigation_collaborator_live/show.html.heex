@@ -1,0 +1,26 @@
+<.header>
+  Investigation collaborator {@investigation_collaborator.id}
+  <:subtitle>This is a investigation_collaborator record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/investigation_collaborators/#{@investigation_collaborator}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit investigation_collaborator</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Role">{@investigation_collaborator.role}</:item>
+</.list>
+
+<.back navigate={~p"/investigation_collaborators"}>Back to investigation_collaborators</.back>
+
+<.modal :if={@live_action == :edit} id="investigation_collaborator-modal" show on_cancel={JS.patch(~p"/investigation_collaborators/#{@investigation_collaborator}")}>
+  <.live_component
+    module={VantageWeb.InvestigationCollaboratorLive.FormComponent}
+    id={@investigation_collaborator.id}
+    title={@page_title}
+    action={@live_action}
+    investigation_collaborator={@investigation_collaborator}
+    patch={~p"/investigation_collaborators/#{@investigation_collaborator}"}
+  />
+</.modal>
