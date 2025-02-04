@@ -67,6 +67,9 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
   end
 
   defp save_projection(socket, :new, projection_params) do
+    investigation_id = socket.assigns.investigation_id
+    projection_params = Map.put(projection_params, "investigation_id", investigation_id)
+
     case Projections.create_projection(projection_params) do
       {:ok, projection} ->
         notify_parent({:saved, projection})

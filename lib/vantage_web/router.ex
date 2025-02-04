@@ -80,12 +80,15 @@ defmodule VantageWeb.Router do
       live "/investigation_collaborators/:id", InvestigationCollaboratorLive.Show, :show
       live "/investigation_collaborators/:id/show/edit", InvestigationCollaboratorLive.Show, :edit
 
-      live "/projections", ProjectionLive.Index, :index
-      live "/projections/new", ProjectionLive.Index, :new
-      live "/projections/:id/edit", ProjectionLive.Index, :edit
+      live "/investigations/:investigation_id/projections", ProjectionLive.Index, :index
+      live "/investigations/:investigation_id/projections/new", ProjectionLive.Index, :new
+      live "/investigations/:investigation_id/projections/:id/edit", ProjectionLive.Index, :edit
 
-      live "/projections/:id", ProjectionLive.Show, :show
-      live "/projections/:id/show/edit", ProjectionLive.Show, :edit
+      live "/investigations/:investigation_id/projections/:id", ProjectionLive.Show, :show
+
+      live "/investigations/:investigation_id/projections/:id/show/edit",
+           ProjectionLive.Show,
+           :edit
 
       live "/keyframes", KeyframeLive.Index, :index
       live "/keyframes/new", KeyframeLive.Index, :new

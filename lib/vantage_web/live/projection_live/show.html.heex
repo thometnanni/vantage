@@ -2,7 +2,10 @@
   Projection {@projection.id}
   <:subtitle>This is a projection record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/projections/#{@projection}/show/edit"} phx-click={JS.push_focus()}>
+    <.link
+      patch={~p"/investigations/#{@investigation_id}/projections/#{@projection}/show/edit"}
+      phx-click={JS.push_focus()}
+    >
       <.button>Edit projection</.button>
     </.link>
   </:actions>
@@ -15,15 +18,20 @@
   <:item title="Time">{@projection.time}</:item>
 </.list>
 
-<.back navigate={~p"/projections"}>Back to projections</.back>
+<.back navigate={~p"/investigations/#{@investigation_id}/projections"}>Back to projections</.back>
 
-<.modal :if={@live_action == :edit} id="projection-modal" show on_cancel={JS.patch(~p"/projections/#{@projection}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="projection-modal"
+  show
+  on_cancel={JS.patch(~p"/investigations/#{@investigation_id}/projections/#{@projection}")}
+>
   <.live_component
     module={VantageWeb.ProjectionLive.FormComponent}
     id={@projection.id}
     title={@page_title}
     action={@live_action}
     projection={@projection}
-    patch={~p"/projections/#{@projection}"}
+    patch={~p"/investigations/#{@investigation_id}/projections/#{@projection}"}
   />
 </.modal>

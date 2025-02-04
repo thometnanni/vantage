@@ -17,8 +17,12 @@ defmodule Vantage.Projections do
       [%Projection{}, ...]
 
   """
-  def list_projections do
-    Repo.all(Projection)
+  def list_projections(investigation_id) do
+    query =
+      from p in Projection,
+        where: p.investigation_id == ^investigation_id
+
+    Repo.all(query)
   end
 
   @doc """
