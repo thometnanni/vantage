@@ -41,7 +41,13 @@ defmodule VantageWeb.ModelLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"id" => id, "file" => file}, socket) do
+    file_path = Path.join([:code.priv_dir(:vantage), "static", "uploads", Path.basename(file)])
+
+    if File.exists?(file_path) do
+      File.rm!(file_path)
+    end
+
     model = Models.get_model!(id)
     {:ok, _} = Models.delete_model(model)
 

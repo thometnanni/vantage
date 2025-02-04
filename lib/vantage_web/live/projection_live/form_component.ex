@@ -12,6 +12,39 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
         <:subtitle>Use this form to manage projection records in your database.</:subtitle>
       </.header>
 
+      <section phx-drop-target={@uploads.media.ref}>
+        <%!-- render each media entry --%>
+        <article :for={entry <- @uploads.media.entries} class="upload-entry">
+          <figure>
+            <.live_img_preview entry={entry} />
+            <figcaption>{entry.client_name}</figcaption>
+          </figure>
+
+          <%!-- entry.progress will update automatically for in-flight entries --%>
+          <progress value={entry.progress} max="100">{entry.progress}%</progress>
+
+          <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
+          <button
+            type="button"
+            phx-click="cancel-upload"
+            phx-value-ref={entry.ref}
+            aria-label="cancel"
+          >
+            &times;
+          </button>
+
+          <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
+          <p :for={err <- upload_errors(@uploads.media, entry)} class="alert alert-danger">
+            {error_to_string(err)}
+          </p>
+        </article>
+
+        <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
+        <p :for={err <- upload_errors(@uploads.media)} class="alert alert-danger">
+          {error_to_string(err)}
+        </p>
+      </section>
+
       <.simple_form
         for={@form}
         id="projection-form"
@@ -20,7 +53,8 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:file]} type="text" label="File" />
+        <%!-- <.input field={@form[:file]} type="text" label="File" /> --%>
+        <.live_file_input upload={@uploads.media} />
         <.input field={@form[:orthographic]} type="checkbox" label="Orthographic" />
         <.input field={@form[:time]} type="number" label="Time" step="any" />
         <:actions>
@@ -38,7 +72,9 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
      |> assign(assigns)
      |> assign_new(:form, fn ->
        to_form(Projections.change_projection(projection))
-     end)}
+     end)
+     |> assign(:uploaded_files, [])
+     |> allow_upload(:media, accept: ~w(.png .jpg .jpeg .gif), max_entries: 1)}
   end
 
   @impl true
@@ -48,7 +84,38 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
   end
 
   def handle_event("save", %{"projection" => projection_params}, socket) do
+    current_media_file = socket.assigns.projection.file
+
+    media_file =
+      consume_uploaded_entries(socket, :media, fn %{path: path}, _entry ->
+        dest = Path.join([:code.priv_dir(:vantage), "static", "uploads", Path.basename(path)])
+        # You will need to create `priv/static/uploads` for `File.cp!/2` to work.
+        File.cp!(path, dest)
+        {:ok, ~p"/uploads/#{Path.basename(dest)}"}
+      end)
+      |> List.first()
+
+    if current_media_file && media_file do
+      old_file_path = Path.join([:code.priv_dir(:vantage), "static", current_media_file])
+
+      if File.exists?(old_file_path) do
+        File.rm!(old_file_path)
+      end
+    end
+
+    projection_params =
+      if media_file do
+        Map.put(projection_params, "file", media_file)
+      else
+        projection_params
+      end
+
     save_projection(socket, socket.assigns.action, projection_params)
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :media, ref)}
   end
 
   defp save_projection(socket, :edit, projection_params) do
@@ -85,4 +152,8 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp error_to_string(:too_large), do: "Too large"
+  defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
+  defp error_to_string(:too_many_files), do: "You have selected too many files"
 end
