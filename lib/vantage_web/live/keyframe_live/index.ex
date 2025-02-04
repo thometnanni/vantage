@@ -5,13 +5,17 @@ defmodule VantageWeb.KeyframeLive.Index do
   alias Vantage.Keyframes.Keyframe
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, stream(socket, :keyframes, Keyframes.list_keyframes())}
+  def mount(params, _session, socket) do
+    {:ok, stream(socket, :keyframes, Keyframes.list_keyframes(params["projection_id"]))}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {:noreply,
+     socket
+     |> apply_action(socket.assigns.live_action, params)
+     |> assign(:investigation_id, params["investigation_id"])
+     |> assign(:projection_id, params["projection_id"])}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

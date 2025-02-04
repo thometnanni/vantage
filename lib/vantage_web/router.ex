@@ -90,12 +90,25 @@ defmodule VantageWeb.Router do
            ProjectionLive.Show,
            :edit
 
-      live "/keyframes", KeyframeLive.Index, :index
-      live "/keyframes/new", KeyframeLive.Index, :new
-      live "/keyframes/:id/edit", KeyframeLive.Index, :edit
+      live "/investigations/:investigation_id/projections/:projection_id/keyframes",
+           KeyframeLive.Index,
+           :index
 
-      live "/keyframes/:id", KeyframeLive.Show, :show
-      live "/keyframes/:id/show/edit", KeyframeLive.Show, :edit
+      live "/investigations/:investigation_id/projections/:projection_id/keyframes/new",
+           KeyframeLive.Index,
+           :new
+
+      live "/investigations/:investigation_id/projections/:projection_id/keyframes/:id/edit",
+           KeyframeLive.Index,
+           :edit
+
+      live "/investigations/:investigation_id/projections/:projection_id/keyframes/:id",
+           KeyframeLive.Show,
+           :show
+
+      live "/investigations/:investigation_id/projections/:projection_id/keyframes/:id/show/edit",
+           KeyframeLive.Show,
+           :edit
 
       live "/investigations/:investigation_id/models", ModelLive.Index, :index
       live "/investigations/:investigation_id/models/new", ModelLive.Index, :new

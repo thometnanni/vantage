@@ -17,8 +17,12 @@ defmodule Vantage.Keyframes do
       [%Keyframe{}, ...]
 
   """
-  def list_keyframes do
-    Repo.all(Keyframe)
+  def list_keyframes(projection_id) do
+    query =
+      from k in Keyframe,
+        where: k.projection_id == ^projection_id
+
+    Repo.all(query)
   end
 
   @doc """

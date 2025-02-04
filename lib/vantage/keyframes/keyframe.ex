@@ -19,6 +19,6 @@ defmodule Vantage.Keyframes.Keyframe do
   def changeset(keyframe, attrs) do
     keyframe
     |> cast(attrs, [:time, :position, :rotation, :far, :fov, :projection_id])
-    |> validate_required([:time, :position, :rotation, :far, :fov, :projection_id])
+    |> validate_required([:time, :projection_id])
   end
 end

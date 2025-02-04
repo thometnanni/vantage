@@ -20,20 +20,8 @@ defmodule VantageWeb.KeyframeLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:time]} type="number" label="Time" step="any" />
-        <.input
-          field={@form[:position]}
-          type="select"
-          multiple
-          label="Position"
-          options={[]}
-        />
-        <.input
-          field={@form[:rotation]}
-          type="select"
-          multiple
-          label="Rotation"
-          options={[]}
-        />
+        <.input field={@form[:position]} type="select" multiple label="Position" options={[]} />
+        <.input field={@form[:rotation]} type="select" multiple label="Rotation" options={[]} />
         <.input field={@form[:far]} type="number" label="Far" step="any" />
         <.input field={@form[:fov]} type="number" label="Fov" step="any" />
         <:actions>
@@ -80,6 +68,9 @@ defmodule VantageWeb.KeyframeLive.FormComponent do
   end
 
   defp save_keyframe(socket, :new, keyframe_params) do
+    projection_id = socket.assigns.projection_id
+    keyframe_params = Map.put(keyframe_params, "projection_id", projection_id)
+
     case Keyframes.create_keyframe(keyframe_params) do
       {:ok, keyframe} ->
         notify_parent({:saved, keyframe})
