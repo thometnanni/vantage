@@ -23,7 +23,7 @@ defmodule VantageWeb.InvestigationLive.FormComponent do
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />
         <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
-        <.input field={@form[:time]} type="text" label="Time" type="datetime-local" />
+        <.input field={@form[:time]} label="Time" type="datetime-local" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Investigation</.button>
         </:actions>
