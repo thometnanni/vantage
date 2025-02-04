@@ -65,6 +65,9 @@ defmodule VantageWeb.ModelLive.FormComponent do
   end
 
   defp save_model(socket, :new, model_params) do
+    investigation_id = socket.assigns.investigation_id
+    model_params = Map.put(model_params, "investigation_id", investigation_id)
+
     case Models.create_model(model_params) do
       {:ok, model} ->
         notify_parent({:saved, model})

@@ -97,12 +97,12 @@ defmodule VantageWeb.Router do
       live "/keyframes/:id", KeyframeLive.Show, :show
       live "/keyframes/:id/show/edit", KeyframeLive.Show, :edit
 
-      live "/models", ModelLive.Index, :index
-      live "/models/new", ModelLive.Index, :new
-      live "/models/:id/edit", ModelLive.Index, :edit
+      live "/investigations/:investigation_id/models", ModelLive.Index, :index
+      live "/investigations/:investigation_id/models/new", ModelLive.Index, :new
+      live "/investigations/:investigation_id/models/:id/edit", ModelLive.Index, :edit
 
-      live "/models/:id", ModelLive.Show, :show
-      live "/models/:id/show/edit", ModelLive.Show, :edit
+      live "/investigations/:investigation_id/models/:id", ModelLive.Show, :show
+      live "/investigations/:investigation_id/models/:id/show/edit", ModelLive.Show, :edit
 
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email

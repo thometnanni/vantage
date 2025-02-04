@@ -2,7 +2,10 @@
   Model {@model.id}
   <:subtitle>This is a model record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/models/#{@model}/show/edit"} phx-click={JS.push_focus()}>
+    <.link
+      patch={~p"/investigations/#{@investigation_id}/models/#{@model}/show/edit"}
+      phx-click={JS.push_focus()}
+    >
       <.button>Edit model</.button>
     </.link>
   </:actions>
@@ -13,15 +16,20 @@
   <:item title="File">{@model.file}</:item>
 </.list>
 
-<.back navigate={~p"/models"}>Back to models</.back>
+<.back navigate={~p"/investigations/#{@investigation_id}/models"}>Back to models</.back>
 
-<.modal :if={@live_action == :edit} id="model-modal" show on_cancel={JS.patch(~p"/models/#{@model}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="model-modal"
+  show
+  on_cancel={JS.patch(~p"/investigations/#{@investigation_id}/models/#{@model}")}
+>
   <.live_component
     module={VantageWeb.ModelLive.FormComponent}
     id={@model.id}
     title={@page_title}
     action={@live_action}
     model={@model}
-    patch={~p"/models/#{@model}"}
+    patch={~p"/investigations/#{@investigation_id}/models/#{@model}"}
   />
 </.modal>

@@ -1,7 +1,7 @@
 <.header>
   Listing Models
   <:actions>
-    <.link patch={~p"/models/new"}>
+    <.link patch={~p"/investigations/#{@investigation_id}/models/new"}>
       <.button>New Model</.button>
     </.link>
   </:actions>
@@ -10,15 +10,17 @@
 <.table
   id="models"
   rows={@streams.models}
-  row_click={fn {_id, model} -> JS.navigate(~p"/models/#{model}") end}
+  row_click={
+    fn {_id, model} -> JS.navigate(~p"/investigations/#{@investigation_id}/models/#{model}") end
+  }
 >
   <:col :let={{_id, model}} label="Name">{model.name}</:col>
   <:col :let={{_id, model}} label="File">{model.file}</:col>
   <:action :let={{_id, model}}>
     <div class="sr-only">
-      <.link navigate={~p"/models/#{model}"}>Show</.link>
+      <.link navigate={~p"/investigations/#{@investigation_id}/models/#{model}"}>Show</.link>
     </div>
-    <.link patch={~p"/models/#{model}/edit"}>Edit</.link>
+    <.link patch={~p"/investigations/#{@investigation_id}/models/#{model}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, model}}>
     <.link
@@ -30,13 +32,19 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="model-modal" show on_cancel={JS.patch(~p"/models")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="model-modal"
+  show
+  on_cancel={JS.patch(~p"/investigations/#{@investigation_id}/models")}
+>
   <.live_component
     module={VantageWeb.ModelLive.FormComponent}
     id={@model.id || :new}
     title={@page_title}
     action={@live_action}
     model={@model}
-    patch={~p"/models"}
+    investigation_id={@investigation_id}
+    patch={~p"/investigations/#{@investigation_id}/models"}
   />
 </.modal>

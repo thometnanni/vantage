@@ -5,13 +5,16 @@ defmodule VantageWeb.ModelLive.Index do
   alias Vantage.Models.Model
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, stream(socket, :models, Models.list_models())}
+  def mount(params, _session, socket) do
+    {:ok, stream(socket, :models, Models.list_models(params["investigation_id"]))}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {:noreply,
+     socket
+     |> apply_action(socket.assigns.live_action, params)
+     |> assign(:investigation_id, params["investigation_id"])}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

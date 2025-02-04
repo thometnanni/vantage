@@ -17,8 +17,12 @@ defmodule Vantage.Models do
       [%Model{}, ...]
 
   """
-  def list_models do
-    Repo.all(Model)
+  def list_models(investigation_id) do
+    query =
+      from m in Model,
+        where: m.investigation_id == ^investigation_id
+
+    Repo.all(query)
   end
 
   @doc """
