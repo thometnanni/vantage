@@ -33,11 +33,17 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="investigation-modal" show on_cancel={JS.patch(~p"/investigations")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="investigation-modal"
+  show
+  on_cancel={JS.patch(~p"/investigations")}
+>
   <.live_component
     module={VantageWeb.InvestigationLive.FormComponent}
     id={@investigation.id || :new}
     title={@page_title}
+    current_user={@current_user}
     action={@live_action}
     investigation={@investigation}
     patch={~p"/investigations"}

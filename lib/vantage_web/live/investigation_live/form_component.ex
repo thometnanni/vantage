@@ -70,7 +70,7 @@ defmodule VantageWeb.InvestigationLive.FormComponent do
   end
 
   defp save_investigation(socket, :new, investigation_params) do
-    case Investigations.create_investigation(investigation_params) do
+    case Investigations.create_investigation(socket.assigns.current_user, investigation_params) do
       {:ok, investigation} ->
         notify_parent({:saved, investigation})
 

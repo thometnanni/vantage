@@ -7,6 +7,7 @@ defmodule Vantage.Investigations do
   alias Vantage.Repo
 
   alias Vantage.Investigations.Investigation
+  alias Vantage.Investigations.InvestigationCollaborator
 
   @doc """
   Returns the list of investigations.
@@ -49,10 +50,22 @@ defmodule Vantage.Investigations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_investigation(attrs \\ %{}) do
+  def create_investigation(user, attrs \\ %{}) do
     %Investigation{}
     |> Investigation.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, investigation} ->
+        create_investigation_collaborator(user, %{
+          role: :owner,
+          investigation_id: investigation.id
+        })
+
+        {:ok, investigation}
+
+      error ->
+        {:error, error}
+    end
   end
 
   @doc """
@@ -101,8 +114,6 @@ defmodule Vantage.Investigations do
   def change_investigation(%Investigation{} = investigation, attrs \\ %{}) do
     Investigation.changeset(investigation, attrs)
   end
-
-  alias Vantage.Investigations.InvestigationCollaborator
 
   @doc """
   Returns the list of investigation_collaborators.
