@@ -1,0 +1,69 @@
+<header class="px-4 sm:px-6 lg:px-8 bg-black text-white">
+  <div class="flex items-center justify-between py-3 text-sm">
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-lg leading-8">
+        Vantage <%!-- <img src={~p"/images/logo.svg"} class="w-[30px]" /> --%>
+      </a>
+      <span class="text-lg leading-8">
+        {assigns[:page_title]}
+      </span>
+    </div>
+    <div class="flex items-center gap-4  leading-8">
+      <%= if @current_user do %>
+        <div class="flex items-center rounded-full bg-brand/15 text-brand group">
+          <button
+            class="px-2.5 rounded-full hover:bg-brand hover:text-black"
+            phx-click={VantageWeb.Layouts.Root.toggle_user_menu()}
+          >
+            {@current_user.email}
+          </button>
+          <div id="user-menu" hidden phx-click-away={VantageWeb.Layouts.Root.toggle_user_menu()}>
+            <div class="flex items-center">
+              <.link
+                href={~p"/users/settings"}
+                class="px-2.5 rounded-full hover:bg-brand hover:text-black"
+              >
+                Settings
+              </.link>
+
+              <.link
+                href={~p"/users/log_out"}
+                method="delete"
+                class="px-2.5 rounded-full hover:bg-brand hover:text-black"
+              >
+                Log out
+              </.link>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="flex items-center rounded-full bg-brand/15 text-brand group">
+          <.link
+            href={~p"/users/log_in"}
+            class={
+              if @socket && @socket.view == VantageWeb.UserLoginLive do
+                "px-2.5 rounded-full bg-brand/80 text-black group-hover:bg-transparent group-hover:text-inherit hover:!bg-brand hover:!text-black"
+              else
+                "px-2.5 rounded-full hover:bg-brand hover:text-black"
+              end
+            }
+          >
+            Log in
+          </.link>
+          <.link
+            href={~p"/users/register"}
+            class={
+              if @socket && @socket.view == VantageWeb.UserLoginLive do
+                "px-2.5 rounded-full hover:bg-brand hover:text-black"
+              else
+                "px-2.5 rounded-full bg-brand/80 text-black group-hover:bg-transparent group-hover:text-inherit hover:!bg-brand hover:!text-black"
+              end
+            }
+          >
+            Register
+          </.link>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</header>

@@ -10,12 +10,15 @@ defmodule VantageWeb.InvestigationLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    investigation = Investigations.get_investigation!(id)
+
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:investigation, Investigations.get_investigation!(id))}
+     |> assign(:page_title, page_title(socket.assigns.live_action, investigation.name))
+     |> assign(:header_title, page_title(socket.assigns.live_action, investigation.name))
+     |> assign(:investigation, investigation)}
   end
 
-  defp page_title(:show), do: "Show Investigation"
-  defp page_title(:edit), do: "Edit Investigation"
+  defp page_title(:show, name), do: name
+  defp page_title(:edit, name), do: "Edit #{name}"
 end

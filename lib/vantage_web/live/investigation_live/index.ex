@@ -28,7 +28,7 @@ defmodule VantageWeb.InvestigationLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Investigations")
+    |> assign(:page_title, "Investigations")
     |> assign(:investigation, nil)
   end
 
@@ -38,10 +38,44 @@ defmodule VantageWeb.InvestigationLive.Index do
   end
 
   @impl true
+  def handle_event("new_investigation", _params, socket) do
+    case Investigations.create_investigation(socket.assigns.current_user, %{}) do
+      {:ok, investigation} ->
+        {
+          :noreply,
+          socket
+          |> put_flash(:info, "New investigation created successfully")
+          |> push_navigate(to: ~p"/investigations/#{investigation.id}")
+        }
+
+      {:error, _err} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Failed to create investigation")}
+    end
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     investigation = Investigations.get_investigation!(id)
     {:ok, _} = Investigations.delete_investigation(investigation)
 
     {:noreply, stream_delete(socket, :investigations, investigation)}
+  end
+
+  defp format_coordinates(longitude, latitude) do
+    if longitude && latitude do
+      "#{Float.round(longitude, 2)}, #{Float.round(latitude, 2)}"
+    else
+      nil
+    end
+  end
+
+  defp format_date(date) do
+    if date do
+      Timex.format!(date, "{Mshort} {D}, {YYYY} {h24}:{m}")
+    else
+      nil
+    end
   end
 end

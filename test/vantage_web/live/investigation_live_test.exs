@@ -4,8 +4,20 @@ defmodule VantageWeb.InvestigationLiveTest do
   import Phoenix.LiveViewTest
   import Vantage.InvestigationsFixtures
 
-  @create_attrs %{name: "some name", time: "2025-02-02T15:37:00.000000Z", description: "some description", longitude: 120.5, latitude: 120.5}
-  @update_attrs %{name: "some updated name", time: "2025-02-03T15:37:00.000000Z", description: "some updated description", longitude: 456.7, latitude: 456.7}
+  @create_attrs %{
+    name: "some name",
+    time: "2025-02-02T15:37:00.000000Z",
+    description: "some description",
+    longitude: 120.5,
+    latitude: 120.5
+  }
+  @update_attrs %{
+    name: "some updated name",
+    time: "2025-02-03T15:37:00.000000Z",
+    description: "some updated description",
+    longitude: 456.7,
+    latitude: 456.7
+  }
   @invalid_attrs %{name: nil, time: nil, description: nil, longitude: nil, latitude: nil}
 
   defp create_investigation(_) do
@@ -19,7 +31,7 @@ defmodule VantageWeb.InvestigationLiveTest do
     test "lists all investigations", %{conn: conn, investigation: investigation} do
       {:ok, _index_live, html} = live(conn, ~p"/investigations")
 
-      assert html =~ "Listing Investigations"
+      assert html =~ "Investigations"
       assert html =~ investigation.name
     end
 
@@ -49,7 +61,9 @@ defmodule VantageWeb.InvestigationLiveTest do
     test "updates investigation in listing", %{conn: conn, investigation: investigation} do
       {:ok, index_live, _html} = live(conn, ~p"/investigations")
 
-      assert index_live |> element("#investigations-#{investigation.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element("#investigations-#{investigation.id} a", "Edit")
+             |> render_click() =~
                "Edit Investigation"
 
       assert_patch(index_live, ~p"/investigations/#{investigation}/edit")
@@ -72,7 +86,10 @@ defmodule VantageWeb.InvestigationLiveTest do
     test "deletes investigation in listing", %{conn: conn, investigation: investigation} do
       {:ok, index_live, _html} = live(conn, ~p"/investigations")
 
-      assert index_live |> element("#investigations-#{investigation.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#investigations-#{investigation.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#investigations-#{investigation.id}")
     end
   end
