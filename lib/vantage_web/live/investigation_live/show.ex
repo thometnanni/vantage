@@ -5,7 +5,7 @@ defmodule VantageWeb.InvestigationLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, socket, layout: {VantageWeb.Layouts, :full}}
   end
 
   @impl true
