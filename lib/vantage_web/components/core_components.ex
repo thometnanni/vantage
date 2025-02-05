@@ -466,6 +466,9 @@ defmodule VantageWeb.CoreComponents do
 
   slot :action, doc: "the slot for showing user actions in the last table column"
 
+  slot :main_action,
+    doc: "the slot for showing user actions in the last table column of the head row"
+
   def table(assigns) do
     assigns =
       with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
@@ -475,11 +478,22 @@ defmodule VantageWeb.CoreComponents do
     ~H"""
     <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
       <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
+        <thead class="text-sm text-left leading-6 text-zinc-500 align-baseline">
           <tr>
             <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
-            <th :if={@action != []} class="relative p-0 pb-4">
+            <th :if={@action != [] && @main_action == []} class="relative p-0 pb-4">
               <span class="sr-only">{gettext("Actions")}</span>
+            </th>
+            <th :if={@main_action != []} class="relative w-14 p-0">
+              <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
+                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
+                <span
+                  :for={main_action <- @main_action}
+                  class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+                >
+                  {render_slot(main_action)}
+                </span>
+              </div>
             </th>
           </tr>
         </thead>
