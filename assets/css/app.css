@@ -3,3 +3,19 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/SpaceGrotesk.woff2');
+  font-style: normal;
+  font-weight: 300 700;
+}
+
+.font-brand {
+  font-feature-settings: 'liga', 'ss02', 'ss03';
+  text-rendering: geometricPrecision;
+}
+
+
+:root {
+  @apply font-brand
+}
