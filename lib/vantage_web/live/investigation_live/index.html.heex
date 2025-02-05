@@ -1,4 +1,4 @@
-<header>
+<header class="flex justify-end">
   <.button phx-click="new_investigation">
     New Investigation
   </.button>
@@ -19,6 +19,7 @@
   <:col :let={{_id, investigation}} label="Created">
     {format_date(investigation.inserted_at)}
   </:col>
+
   <:action :let={{_id, investigation}}>
     <div class="sr-only">
       <.link navigate={~p"/investigations/#{investigation}"}>Show</.link>
