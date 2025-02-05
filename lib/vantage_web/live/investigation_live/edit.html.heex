@@ -1,0 +1,48 @@
+<div class="flex flex-col h-full w-full">
+  <div id="renderer" class="flex-grow bg-black border-t border-white">
+    <%!-- <vantage-renderer>
+        <vantage-projection></vantage-projection>
+      </vantage-renderer> --%>
+  </div>
+  <div id="timeline" class="h-16 bg-blue-200">
+    Timeline
+  </div>
+</div>
+<div :if={@live_action == :edit} id="inspector" class="w-[350px] h-full bg-teal-200">
+  <.simple_form
+    for={@investigation_form}
+    phx-change="save"
+    phx-submit="save"
+    id="investigation-form"
+  >
+    <.input
+      field={@investigation_form[:name]}
+      label="Title"
+      placeholder={@investigation_form.data.name}
+    />
+    <.input field={@investigation_form[:description]} label="Description" />
+    <.input field={@investigation_form[:time]} label="Time" type="datetime-local" />
+
+    <div class="flex gap-2">
+      <.input field={@investigation_form[:longitude]} type="number" label="Longitude" step="any" />
+      <.input field={@investigation_form[:latitude]} type="number" label="Latitude" step="any" />
+    </div>
+  </.simple_form>
+</div>
+
+<%!-- <.modal
+  :if={@live_action == :edit}
+  id="investigation-modal"
+  show
+  on_cancel={JS.patch(~p"/investigations/#{@investigation}")}
+>
+  <.live_component
+    module={VantageWeb.InvestigationLive.FormComponent}
+    id={@investigation.id}
+    current_user={@current_user}
+    title={@page_title}
+    action={@live_action}
+    investigation={@investigation}
+    patch={~p"/investigations/#{@investigation}"}
+  />
+</.modal> --%>

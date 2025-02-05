@@ -1,7 +1,11 @@
-<.app_header
-  current_user={@current_user}
-  page_title={assigns[:page_title]}
-  socket={assigns[:socket]}
-/>
-<.flash_group flash={@flash} />
-{@inner_content}
+<div class="flex flex-col h-screen">
+  <.app_header
+    current_user={@current_user}
+    page_title={assigns[:page_title]}
+    socket={assigns[:socket]}
+  />
+  <main class="flex-grow flex">
+    <.flash_group flash={@flash} />
+    {@inner_content}
+  </main>
+</div>
