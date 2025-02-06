@@ -1,11 +1,10 @@
-<div class="flex flex-col h-screen">
+<div class="flex flex-col h-screen w-screen relative">
   <.app_header
     current_user={@current_user}
     page_title={assigns[:page_title]}
     socket={assigns[:socket]}
   />
-  <main class="flex-grow flex">
-    <.flash_group flash={@flash} />
-    {@inner_content}
-  </main>
+  <.flash_group flash={@flash} />
+
+  {@inner_content}
 </div>
