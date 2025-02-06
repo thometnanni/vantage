@@ -73,6 +73,12 @@ defmodule VantageWeb.Router do
       live "/investigations/:id", InvestigationLive.Edit, :edit
       live "/investigations/:id/view", InvestigationLive.Edit, :view
 
+      live "/investigations/:id/projections", InvestigationLive.Edit, :projections
+      live "/investigations/:id/projections/:projection_id", InvestigationLive.Edit, :projections
+
+      live "/investigations/:id/models", InvestigationLive.Edit, :models
+      live "/investigations/:id/models/:model_id", InvestigationLive.Edit, :models
+
       live "/investigation_collaborators", InvestigationCollaboratorLive.Index, :index
       live "/investigation_collaborators/new", InvestigationCollaboratorLive.Index, :new
       live "/investigation_collaborators/:id/edit", InvestigationCollaboratorLive.Index, :edit
@@ -80,11 +86,11 @@ defmodule VantageWeb.Router do
       live "/investigation_collaborators/:id", InvestigationCollaboratorLive.Show, :show
       live "/investigation_collaborators/:id/show/edit", InvestigationCollaboratorLive.Show, :edit
 
-      live "/investigations/:investigation_id/projections", ProjectionLive.Index, :index
+      # live "/investigations/:investigation_id/projections", ProjectionLive.Index, :index
       live "/investigations/:investigation_id/projections/new", ProjectionLive.Index, :new
       live "/investigations/:investigation_id/projections/:id/edit", ProjectionLive.Index, :edit
 
-      live "/investigations/:investigation_id/projections/:id", ProjectionLive.Show, :show
+      # live "/investigations/:investigation_id/projections/:id", ProjectionLive.Show, :show
 
       live "/investigations/:investigation_id/projections/:id/show/edit",
            ProjectionLive.Show,
@@ -110,11 +116,11 @@ defmodule VantageWeb.Router do
            KeyframeLive.Show,
            :edit
 
-      live "/investigations/:investigation_id/models", ModelLive.Index, :index
+      # live "/investigations/:investigation_id/models", ModelLive.Index, :index
       live "/investigations/:investigation_id/models/new", ModelLive.Index, :new
       live "/investigations/:investigation_id/models/:id/edit", ModelLive.Index, :edit
 
-      live "/investigations/:investigation_id/models/:id", ModelLive.Show, :show
+      # live "/investigations/:investigation_id/models/:id", ModelLive.Show, :show
       live "/investigations/:investigation_id/models/:id/show/edit", ModelLive.Show, :edit
 
       live "/users/settings", UserSettingsLive, :edit
