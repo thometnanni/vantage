@@ -63,14 +63,6 @@ defmodule VantageWeb.InvestigationLive.Index do
     {:noreply, stream_delete(socket, :investigations, investigation)}
   end
 
-  defp format_coordinates(longitude, latitude) do
-    if longitude && latitude do
-      "#{Float.round(longitude, 2)}, #{Float.round(latitude, 2)}"
-    else
-      nil
-    end
-  end
-
   defp format_date(date) do
     if date do
       Timex.format!(date, "{Mshort} {D}, {YYYY} {h24}:{m}")
