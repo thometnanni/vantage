@@ -74,9 +74,19 @@ defmodule VantageWeb.Router do
       live "/investigations/:id/view", InvestigationLive.Edit, :view
 
       live "/investigations/:id/projections", InvestigationLive.Edit, :projections
+
+      live "/investigations/:investigation_id/projections/list", ProjectionLive.Index, :index
+      live "/investigations/:investigation_id/projections/new", ProjectionLive.Index, :new
+      live "/investigations/:investigation_id/projections/:id/edit", ProjectionLive.Index, :edit
+
       live "/investigations/:id/projections/:projection_id", InvestigationLive.Edit, :projections
 
       live "/investigations/:id/models", InvestigationLive.Edit, :models
+
+      live "/investigations/:investigation_id/models/list", ModelLive.Index, :index
+      live "/investigations/:investigation_id/models/new", ModelLive.Index, :new
+      live "/investigations/:investigation_id/models/:id/edit", ModelLive.Index, :edit
+
       live "/investigations/:id/models/:model_id", InvestigationLive.Edit, :models
 
       live "/investigation_collaborators", InvestigationCollaboratorLive.Index, :index
@@ -115,10 +125,6 @@ defmodule VantageWeb.Router do
       live "/investigations/:investigation_id/projections/:projection_id/keyframes/:id/show/edit",
            KeyframeLive.Show,
            :edit
-
-      # live "/investigations/:investigation_id/models", ModelLive.Index, :index
-      live "/investigations/:investigation_id/models/new", ModelLive.Index, :new
-      live "/investigations/:investigation_id/models/:id/edit", ModelLive.Index, :edit
 
       # live "/investigations/:investigation_id/models/:id", ModelLive.Show, :show
       live "/investigations/:investigation_id/models/:id/show/edit", ModelLive.Show, :edit

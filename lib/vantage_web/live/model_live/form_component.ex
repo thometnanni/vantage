@@ -1,6 +1,6 @@
 defmodule VantageWeb.ModelLive.FormComponent do
   use VantageWeb, :live_component
-
+  require Logger
   alias Vantage.Models
 
   @impl true
@@ -138,6 +138,7 @@ defmodule VantageWeb.ModelLive.FormComponent do
     case Models.create_model(model_params) do
       {:ok, model} ->
         notify_parent({:saved, model})
+        Logger.warning("model in form: #{socket.assigns.patch}")
 
         {:noreply,
          socket

@@ -1,16 +1,19 @@
 defmodule VantageWeb.ModelLive.Index do
   use VantageWeb, :live_view
-
+  require Logger
   alias Vantage.Models
   alias Vantage.Models.Model
 
   @impl true
   def mount(params, _session, socket) do
+    Logger.warning("MOUNT    MOUNT - 2")
     {:ok, stream(socket, :models, Models.list_models(params["investigation_id"]))}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
+    Logger.warning("HANDLE PARAMS    HANDLE PARAMS - 2")
+
     {:noreply,
      socket
      |> apply_action(socket.assigns.live_action, params)

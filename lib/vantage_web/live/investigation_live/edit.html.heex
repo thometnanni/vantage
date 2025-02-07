@@ -1,17 +1,66 @@
 <main class={[
   "flex-grow grid grid-rows-[1fr_64px] overflow-hidden h-full w-full",
-  @live_action != :view && "grid-cols-[1fr_250px]",
+  @live_action != :view && "grid-cols-[1fr_350px]",
   @live_action == :view && "grid-cols-1"
 ]}>
   <%!-- <div id="renderer" class="bg-black h-full w-full overflow-hidden"> --%>
-  <vantage-renderer class="bg-black border-t border-white">
-    <vantage-projection></vantage-projection>
+  <vantage-renderer
+    scene={@models != [] && Enum.at(@models, 0).file}
+    class="bg-black border-t border-white"
+  >
+    <vantage-projection :for={projection <- @projections} src={projection.file}>
+    </vantage-projection>
   </vantage-renderer>
   <%!-- </div> --%>
-  <div :if={@live_action != :view} id="inspector" class="bg-teal-200 row-span-2">
+  <div :if={@live_action != :view} id="inspector" class="row-span-2 p-2 gap-2 flex flex-col">
+    <nav class="flex items-center justify-stretch rounded-full bg-black/15 text-black group gap-0.5">
+      <.link
+        href={~p"/investigations/#{@investigation.id}/projections"}
+        class={[
+          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          @live_action == :projections &&
+            "!bg-black !text-white"
+        ]}
+      >
+        Projections
+      </.link>
+      <.link
+        href={~p"/investigations/#{@investigation.id}/models"}
+        class={[
+          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          @live_action == :models &&
+            "!bg-black !text-white"
+        ]}
+      >
+        Models
+      </.link>
+      <.link
+        href={~p"/investigations/#{@investigation.id}/"}
+        class={[
+          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          @live_action == :edit &&
+            "!bg-black !text-white"
+        ]}
+      >
+        Investigation
+      </.link>
+    </nav>
+
     <.live_component
       :if={@live_action == :edit}
       module={VantageWeb.InvestigationLive.FormInvestigation}
+      id={@investigation.id}
+      investigation={@investigation}
+    />
+    <.live_component
+      :if={@live_action == :models}
+      module={VantageWeb.InvestigationLive.ListModels}
+      id={@investigation.id}
+      investigation={@investigation}
+    />
+    <.live_component
+      :if={@live_action == :projections}
+      module={VantageWeb.InvestigationLive.ListProjections}
       id={@investigation.id}
       investigation={@investigation}
     />

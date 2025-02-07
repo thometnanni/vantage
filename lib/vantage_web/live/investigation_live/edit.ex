@@ -3,44 +3,59 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   require Logger
 
-  alias Vantage.{Investigations, Investigations.Investigation, Models, Models.Model}
+  alias Vantage.{
+    Investigations,
+    Investigations.Investigation,
+    Models,
+    Models.Model,
+    Projections,
+    Projections.Projection
+  }
 
   @impl true
   def mount(_params, _session, socket) do
+    Logger.warning("MOUNT  MOUNT")
     {:ok, socket, layout: {VantageWeb.Layouts, :full}}
   end
 
   @impl true
   def handle_params(params, _, socket) do
+    Logger.warning(inspect(socket.assigns.live_action))
     id = params["id"]
     investigation = Investigations.get_investigation!(id)
-
-    {:noreply,
-     socket
-     |> assign(:page_title, investigation.name)
-     |> assign(:investigation, investigation)
-     |> apply_action(socket.assigns.live_action, params)}
-  end
-
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    investigation_form = Investigations.change_investigation(socket.assigns.investigation)
-
-    socket
-    |> assign(:investigation_form, to_form(investigation_form))
-  end
-
-  defp apply_action(socket, :models, %{"id" => id}) do
     models = Models.list_models(id)
-    Logger.warning("models: #{inspect(models)}")
+    projections = Projections.list_projections(id)
 
-    socket
-    |> assign(:models, models)
+    {
+      :noreply,
+      socket
+      |> assign(:page_title, investigation.name)
+      |> assign(:investigation, investigation)
+      |> assign(:models, models)
+      |> assign(:projections, projections)
+      #  |> apply_action(socket.assigns.live_action, params)
+    }
   end
 
-  defp apply_action(socket, _, %{"id" => id}) do
-    # do nothing
-    socket
-  end
+  # defp apply_action(socket, :edit, %{"id" => id}) do
+  #   investigation_form = Investigations.change_investigation(socket.assigns.investigation)
+
+  #   socket
+  #   |> assign(:investigation_form, to_form(investigation_form))
+  # end
+
+  # defp apply_action(socket, :models, %{"id" => id}) do
+  #   models = Models.list_models(id)
+  #   Logger.warning("models: #{inspect(models)}")
+
+  #   socket
+  #   |> assign(:models, models)
+  # end
+
+  # defp apply_action(socket, _, %{"id" => id}) do
+  #   # do nothing
+  #   socket
+  # end
 
   @impl true
   def handle_info(
