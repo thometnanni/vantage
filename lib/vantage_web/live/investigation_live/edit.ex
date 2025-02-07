@@ -13,26 +13,32 @@ defmodule VantageWeb.InvestigationLive.Edit do
   }
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     Logger.warning("MOUNT  MOUNT")
-    {:ok, socket, layout: {VantageWeb.Layouts, :full}}
+
+    id = params["id"]
+    investigation = Investigations.get_investigation!(id)
+    models = Models.list_models(id)
+
+    projections =
+      Projections.list_projections(id)
+
+    {:ok,
+     socket
+     |> assign(:investigation, investigation)
+     |> assign(:models, models)
+     |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
   end
 
   @impl true
   def handle_params(params, _, socket) do
     Logger.warning(inspect(socket.assigns.live_action))
-    id = params["id"]
-    investigation = Investigations.get_investigation!(id)
-    models = Models.list_models(id)
-    projections = Projections.list_projections(id)
 
     {
       :noreply,
       socket
-      |> assign(:page_title, investigation.name)
-      |> assign(:investigation, investigation)
-      |> assign(:models, models)
-      |> assign(:projections, projections)
+      |> assign(:page_title, socket.assigns.investigation.name)
+
       #  |> apply_action(socket.assigns.live_action, params)
     }
   end
