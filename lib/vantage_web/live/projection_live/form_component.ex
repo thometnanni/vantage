@@ -74,7 +74,7 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
        to_form(Projections.change_projection(projection))
      end)
      |> assign(:uploaded_files, [])
-     |> allow_upload(:media, accept: ~w(.png .jpg .jpeg .gif), max_entries: 1)}
+     |> allow_upload(:media, accept: ~w(.png .jpg .jpeg .gif .mp4 .webm), max_entries: 1)}
   end
 
   @impl true
@@ -87,8 +87,15 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
     current_media_file = socket.assigns.projection.file
 
     media_file =
-      consume_uploaded_entries(socket, :media, fn %{path: path}, _entry ->
-        dest = Path.join([:code.priv_dir(:vantage), "static", "uploads", Path.basename(path)])
+      consume_uploaded_entries(socket, :media, fn %{path: path}, entry ->
+        dest =
+          Path.join([
+            :code.priv_dir(:vantage),
+            "static",
+            "uploads",
+            "#{Path.basename(path)}-#{entry.client_name}"
+          ])
+
         # You will need to create `priv/static/uploads` for `File.cp!/2` to work.
         File.cp!(path, dest)
         {:ok, ~p"/uploads/#{Path.basename(dest)}"}
