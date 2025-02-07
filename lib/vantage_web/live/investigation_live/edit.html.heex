@@ -15,7 +15,7 @@
   <div :if={@live_action != :view} id="inspector" class="row-span-2 p-2 gap-2 flex flex-col">
     <nav class="flex items-center justify-stretch rounded-full bg-black/15 text-black group gap-0.5">
       <.link
-        href={~p"/investigations/#{@investigation.id}/projections"}
+        patch={~p"/investigations/#{@investigation.id}/projections"}
         class={[
           "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
           @live_action == :projections &&
@@ -25,7 +25,7 @@
         Projections
       </.link>
       <.link
-        href={~p"/investigations/#{@investigation.id}/models"}
+        patch={~p"/investigations/#{@investigation.id}/models"}
         class={[
           "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
           @live_action == :models &&
@@ -35,7 +35,7 @@
         Models
       </.link>
       <.link
-        href={~p"/investigations/#{@investigation.id}/"}
+        patch={~p"/investigations/#{@investigation.id}/"}
         class={[
           "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
           @live_action == :edit &&
