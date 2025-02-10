@@ -138,7 +138,6 @@ defmodule VantageWeb.ModelLive.FormComponent do
     case Models.create_model(model_params) do
       {:ok, model} ->
         notify_parent({:saved, model})
-        Logger.warning("model in form: #{socket.assigns.patch}")
 
         {:noreply,
          socket

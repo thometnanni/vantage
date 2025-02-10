@@ -14,8 +14,6 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def mount(params, _session, socket) do
-    Logger.warning("MOUNT  MOUNT")
-
     id = params["id"]
     investigation = Investigations.get_investigation!(id)
     models = Models.list_models(id)
@@ -32,8 +30,6 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def handle_params(params, _, socket) do
-    Logger.warning(inspect(socket.assigns.live_action))
-
     {
       :noreply,
       socket
@@ -52,7 +48,6 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   # defp apply_action(socket, :models, %{"id" => id}) do
   #   models = Models.list_models(id)
-  #   Logger.warning("models: #{inspect(models)}")
 
   #   socket
   #   |> assign(:models, models)
@@ -76,8 +71,6 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def handle_event("save", %{"investigation" => investigation_params}, socket) do
-    Logger.warning("investigation in edit")
-
     case Investigations.update_investigation(socket.assigns.investigation, investigation_params) do
       {:ok, investigation} ->
         changeset = Investigations.change_investigation(%Investigation{})

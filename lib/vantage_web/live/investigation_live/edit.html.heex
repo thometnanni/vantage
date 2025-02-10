@@ -12,58 +12,63 @@
     </vantage-projection>
   </vantage-renderer>
   <%!-- </div> --%>
-  <div :if={@live_action != :view} id="inspector" class="row-span-2 p-2 gap-2 flex flex-col">
-    <nav class="flex items-center justify-stretch rounded-full bg-black/15 text-black group gap-0.5">
+  <div :if={@live_action != :view} id="inspector" class="row-span-2 flex flex-col">
+    <nav class="flex items-center justify-stretch bg-white text-black gap-[1px] border-t border-white">
       <.link
         patch={~p"/investigations/#{@investigation.id}/projections"}
+        replace
         class={[
-          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
           @live_action == :projections &&
-            "!bg-black !text-white"
+            "!bg-white !text-black"
         ]}
       >
         Projections
       </.link>
       <.link
         patch={~p"/investigations/#{@investigation.id}/models"}
+        replace
         class={[
-          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
           @live_action == :models &&
-            "!bg-black !text-white"
+            "!bg-white !text-black"
         ]}
       >
         Models
       </.link>
       <.link
         patch={~p"/investigations/#{@investigation.id}/"}
+        replace
         class={[
-          "px-2.5 py-1 rounded-full hover:bg-black/20 hover:text-black flex justify-center flex-grow",
+          "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
           @live_action == :edit &&
-            "!bg-black !text-white"
+            "!bg-white !text-black"
         ]}
       >
         Investigation
       </.link>
     </nav>
-
-    <.live_component
-      :if={@live_action == :edit}
-      module={VantageWeb.InvestigationLive.FormInvestigation}
-      id={@investigation.id}
-      investigation={@investigation}
-    />
-    <.live_component
-      :if={@live_action == :models}
-      module={VantageWeb.InvestigationLive.ListModels}
-      id={@investigation.id}
-      investigation={@investigation}
-    />
-    <.live_component
-      :if={@live_action == :projections}
-      module={VantageWeb.InvestigationLive.ListProjections}
-      id={@investigation.id}
-      investigation={@investigation}
-    />
+    <section class="p-2">
+      <.live_component
+        :if={@live_action == :edit}
+        module={VantageWeb.InvestigationLive.FormInvestigation}
+        id={@investigation.id}
+        investigation={@investigation}
+      />
+      <.live_component
+        :if={@live_action == :models || @live_action == :projections}
+        module={VantageWeb.InvestigationLive.ListComponent}
+        type={@live_action}
+        items={
+          case @live_action do
+            :models -> @models
+            :projections -> @projections
+          end
+        }
+        id={@investigation.id}
+        investigation={@investigation}
+      />
+    </section>
   </div>
   <div id="timeline" class="bg-blue-200">
     Timeline

@@ -49,8 +49,6 @@ defmodule VantageWeb.InvestigationLive.FormInvestigation do
 
   @impl true
   def handle_event("save", %{"investigation" => investigation_params}, socket) do
-    Logger.warning("investigation in form")
-
     case Investigations.update_investigation(socket.assigns.investigation, investigation_params) do
       {:ok, investigation} ->
         notify_parent({:saved, investigation})
