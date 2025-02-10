@@ -7,8 +7,18 @@
   <vantage-renderer
     scene={@models != [] && Enum.at(@models, 0).file}
     class="bg-black border-t border-white"
+    id="renderer"
+    phx-hook="SetFocus"
   >
-    <vantage-projection :for={projection <- @projections} src={projection.file}>
+    <vantage-projection
+      :for={projection <- @projections}
+      src={projection.file}
+      orthographic={
+        projection.projection_type == :orthographic || projection.projection_type == :map
+      }
+      id={projection.id}
+      focus={projection.id == @projection_id}
+    >
     </vantage-projection>
   </vantage-renderer>
   <%!-- </div> --%>
@@ -58,6 +68,12 @@
       <.live_component
         :if={@live_action == :models || @live_action == :projections}
         module={VantageWeb.InvestigationLive.ListComponent}
+        item_id={
+          case @live_action do
+            :models -> @model_id
+            :projections -> @projection_id
+          end
+        }
         type={@live_action}
         items={
           case @live_action do

@@ -30,11 +30,15 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def handle_params(params, _, socket) do
+    model_id = params["model_id"]
+    projection_id = params["projection_id"]
+
     {
       :noreply,
       socket
       |> assign(:page_title, socket.assigns.investigation.name)
-
+      |> assign(:model_id, model_id)
+      |> assign(:projection_id, projection_id)
       #  |> apply_action(socket.assigns.live_action, params)
     }
   end
@@ -87,8 +91,14 @@ defmodule VantageWeb.InvestigationLive.Edit do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
          socket
-         |> put_flash(:error, "fucked up")
+         |> put_flash(:error, "Error updating investigation")
          |> assign(:investigation_form, to_form(changeset))}
     end
+  end
+
+  def handle_event("vantage:set-focus", %{"id" => id}, socket) do
+    {:noreply,
+     socket
+     |> push_patch(to: ~p"/investigations/#{socket.assigns.investigation.id}/projections/#{id}")}
   end
 end
