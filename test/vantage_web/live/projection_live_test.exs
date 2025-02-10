@@ -4,9 +4,19 @@ defmodule VantageWeb.ProjectionLiveTest do
   import Phoenix.LiveViewTest
   import Vantage.ProjectionsFixtures
 
-  @create_attrs %{name: "some name", time: 120.5, file: "some file", orthographic: true}
-  @update_attrs %{name: "some updated name", time: 456.7, file: "some updated file", orthographic: false}
-  @invalid_attrs %{name: nil, time: nil, file: nil, orthographic: false}
+  @create_attrs %{
+    name: "some name",
+    time: 120.5,
+    file: "some file",
+    projection_type: :orthographic
+  }
+  @update_attrs %{
+    name: "some updated name",
+    time: 456.7,
+    file: "some updated file",
+    projection_type: :perspective
+  }
+  @invalid_attrs %{name: nil, time: nil, file: nil, projection_type: :perspective}
 
   defp create_projection(_) do
     projection = projection_fixture()

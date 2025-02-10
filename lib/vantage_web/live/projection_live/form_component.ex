@@ -55,7 +55,14 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
         <.input field={@form[:name]} type="text" label="Name" />
         <%!-- <.input field={@form[:file]} type="text" label="File" /> --%>
         <.live_file_input upload={@uploads.media} />
-        <.input field={@form[:orthographic]} type="checkbox" label="Orthographic" />
+        <div>
+          <label>Projection Type</label>
+          <.radio_group field={@form[:projection_type]}>
+            <:radio value="perspective">perspective</:radio>
+            <:radio value="orthographic">orthographic</:radio>
+            <:radio value="map">map</:radio>
+          </.radio_group>
+        </div>
         <.input field={@form[:time]} type="number" label="Time" step="any" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Projection</.button>

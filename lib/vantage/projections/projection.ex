@@ -8,7 +8,11 @@ defmodule Vantage.Projections.Projection do
     field :name, :string
     field :time, :float
     field :file, :string
-    field :orthographic, :boolean, default: false
+
+    field :projection_type, Ecto.Enum,
+      values: [:perspective, :orthographic, :map],
+      default: :perspective
+
     belongs_to :investigation, Vantage.Investigations.Investigation
     has_many :keyframes, Vantage.Keyframes.Keyframe
 
@@ -18,7 +22,7 @@ defmodule Vantage.Projections.Projection do
   @doc false
   def changeset(projection, attrs) do
     projection
-    |> cast(attrs, [:name, :file, :orthographic, :time, :investigation_id])
-    |> validate_required([:name, :file, :orthographic, :time, :investigation_id])
+    |> cast(attrs, [:name, :file, :projection_type, :time, :investigation_id])
+    |> validate_required([:name, :file, :projection_type, :time, :investigation_id])
   end
 end

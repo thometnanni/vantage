@@ -8,7 +8,7 @@ defmodule Vantage.ProjectionsTest do
 
     import Vantage.ProjectionsFixtures
 
-    @invalid_attrs %{name: nil, time: nil, file: nil, orthographic: nil}
+    @invalid_attrs %{name: nil, time: nil, file: nil, projection_type: nil}
 
     test "list_projections/0 returns all projections" do
       projection = projection_fixture()
@@ -21,13 +21,18 @@ defmodule Vantage.ProjectionsTest do
     end
 
     test "create_projection/1 with valid data creates a projection" do
-      valid_attrs = %{name: "some name", time: 120.5, file: "some file", orthographic: true}
+      valid_attrs = %{
+        name: "some name",
+        time: 120.5,
+        file: "some file",
+        projection_type: :orthographic
+      }
 
       assert {:ok, %Projection{} = projection} = Projections.create_projection(valid_attrs)
       assert projection.name == "some name"
       assert projection.time == 120.5
       assert projection.file == "some file"
-      assert projection.orthographic == true
+      assert projection.projection_type == :orthographic
     end
 
     test "create_projection/1 with invalid data returns error changeset" do
@@ -36,18 +41,29 @@ defmodule Vantage.ProjectionsTest do
 
     test "update_projection/2 with valid data updates the projection" do
       projection = projection_fixture()
-      update_attrs = %{name: "some updated name", time: 456.7, file: "some updated file", orthographic: false}
 
-      assert {:ok, %Projection{} = projection} = Projections.update_projection(projection, update_attrs)
+      update_attrs = %{
+        name: "some updated name",
+        time: 456.7,
+        file: "some updated file",
+        projection_type: :perspective
+      }
+
+      assert {:ok, %Projection{} = projection} =
+               Projections.update_projection(projection, update_attrs)
+
       assert projection.name == "some updated name"
       assert projection.time == 456.7
       assert projection.file == "some updated file"
-      assert projection.orthographic == false
+      assert projection.projection_type == :perspective
     end
 
     test "update_projection/2 with invalid data returns error changeset" do
       projection = projection_fixture()
-      assert {:error, %Ecto.Changeset{}} = Projections.update_projection(projection, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Projections.update_projection(projection, @invalid_attrs)
+
       assert projection == Projections.get_projection!(projection.id)
     end
 

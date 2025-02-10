@@ -13,7 +13,7 @@ defmodule Vantage.ProjectionsFixtures do
       |> Enum.into(%{
         file: "some file",
         name: "some name",
-        orthographic: true,
+        projection_type: :perspective,
         time: 120.5
       })
       |> Vantage.Projections.create_projection()
