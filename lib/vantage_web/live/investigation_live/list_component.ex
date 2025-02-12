@@ -39,7 +39,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
               end
             }
             replace
-            class="flex-1"
+            class="flex-1 overflow-hidden"
           >
             <div class="flex items-center gap-2">
               <div :if={@type == :projections}>
@@ -56,7 +56,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
                   />
                 <% end %>
               </div>
-              {item.name}
+              <div class="whitespace-nowrap overflow-hidden flex-1 text-ellipsis">{item.name}</div>
             </div>
           </.link>
           <.link

@@ -75,25 +75,22 @@ defmodule VantageWeb.Router do
 
       live "/investigations/:id/projections", InvestigationLive.Edit, :projections
 
-      live "/investigations/:investigation_id/projections/list", ProjectionLive.Index, :index
-
+      # live "/investigations/:investigation_id/projections/list", ProjectionLive.Index, :index
       live "/investigations/:id/projections/new",
            InvestigationLive.Edit,
            :projections_new
+
+      live "/investigations/:id/projections/:projection_id", InvestigationLive.Edit, :projections
 
       live "/investigations/:id/projections/:projection_id/edit",
            InvestigationLive.Edit,
            :projections_edit
 
-      live "/investigations/:id/projections/:projection_id", InvestigationLive.Edit, :projections
-
       live "/investigations/:id/models", InvestigationLive.Edit, :models
-
-      live "/investigations/:investigation_id/models/list", ModelLive.Index, :index
-      live "/investigations/:investigation_id/models/new", ModelLive.Index, :new
-      live "/investigations/:investigation_id/models/:id/edit", ModelLive.Index, :edit
-
+      # live "/investigations/:investigation_id/models/list", ModelLive.Index, :index
+      live "/investigations/:id/models/new", InvestigationLive.Edit, :models_new
       live "/investigations/:id/models/:model_id", InvestigationLive.Edit, :models
+      live "/investigations/:id/models/:model_id/edit", InvestigationLive.Edit, :models_edit
 
       live "/investigation_collaborators", InvestigationCollaboratorLive.Index, :index
       live "/investigation_collaborators/new", InvestigationCollaboratorLive.Index, :new

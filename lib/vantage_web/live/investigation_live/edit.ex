@@ -37,7 +37,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
     live_action = socket.assigns.live_action
 
-    inspector_panel =
+    type =
       cond do
         live_action in [:models, :models_edit, :models_new] -> :models
         live_action in [:projections, :projections_edit, :projections_new] -> :projections
@@ -56,7 +56,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
       :noreply,
       socket
       |> assign(:page_title, socket.assigns.investigation.name)
-      |> assign(:inspector_panel, inspector_panel)
+      |> assign(:type, type)
       |> assign(:modal_action, modal_action)
       |> assign(:model_id, model_id)
       |> assign(:model, model)
@@ -97,7 +97,10 @@ defmodule VantageWeb.InvestigationLive.Edit do
   end
 
   @impl true
-  def handle_info({VantageWeb.InvestigationLive.ModalFormComponent, {:saved, projection}}, socket) do
+  def handle_info(
+        {VantageWeb.InvestigationLive.ModalFormComponent, {:saved_projection, projection}},
+        socket
+      ) do
     projections = socket.assigns.projections
 
     updated_projections =
@@ -113,11 +116,38 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def handle_info(
-        {VantageWeb.InvestigationLive.ModalFormComponent, {:deleted, projection}},
+        {VantageWeb.InvestigationLive.ModalFormComponent, {:saved_model, model}},
+        socket
+      ) do
+    models = socket.assigns.models
+
+    updated_models =
+      if Enum.any?(models, &(&1.id == model.id)) do
+        models
+        |> Enum.map(fn p -> if p.id == model.id, do: model, else: p end)
+      else
+        models ++ [model]
+      end
+
+    {:noreply, assign(socket, :models, updated_models)}
+  end
+
+  @impl true
+  def handle_info(
+        {VantageWeb.InvestigationLive.ModalFormComponent, {:deleted_projection, projection}},
         socket
       ) do
     projections = Enum.reject(socket.assigns.projections, fn p -> p.id == projection.id end)
     {:noreply, assign(socket, :projections, projections)}
+  end
+
+  @impl true
+  def handle_info(
+        {VantageWeb.InvestigationLive.ModalFormComponent, {:deleted_model, model}},
+        socket
+      ) do
+    models = Enum.reject(socket.assigns.models, fn p -> p.id == model.id end)
+    {:noreply, assign(socket, :models, models)}
   end
 
   @impl true
