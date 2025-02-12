@@ -23,7 +23,6 @@ defmodule Vantage.Projections.Projection do
   def changeset(projection, attrs) do
     projection
     |> cast(attrs, [:name, :file, :projection_type, :time, :investigation_id])
-    # |> validate_required([:name, :file, :projection_type, :time, :investigation_id])
-    |> validate_required([:projection_type, :time, :investigation_id])
+    |> validate_required([:name, :file, :projection_type, :time, :investigation_id])
   end
 end

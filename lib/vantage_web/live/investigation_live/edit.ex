@@ -101,12 +101,23 @@ defmodule VantageWeb.InvestigationLive.Edit do
     projections = socket.assigns.projections
 
     updated_projections =
-      projections
-      |> Enum.reject(&(&1.id == projection.id))
-      |> Enum.concat([projection])
+      if Enum.any?(projections, &(&1.id == projection.id)) do
+        projections
+        |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+      else
+        projections ++ [projection]
+      end
 
     {:noreply, assign(socket, :projections, updated_projections)}
-    # {:noreply, stream_insert(socket, :projections, projection)}
+  end
+
+  @impl true
+  def handle_info(
+        {VantageWeb.InvestigationLive.ModalFormComponent, {:deleted, projection}},
+        socket
+      ) do
+    projections = Enum.reject(socket.assigns.projections, fn p -> p.id == projection.id end)
+    {:noreply, assign(socket, :projections, projections)}
   end
 
   @impl true

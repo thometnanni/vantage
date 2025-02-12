@@ -38,6 +38,14 @@ Hooks.SetFocus = {
   },
 };
 
+Hooks.OpenFileDialogue = {
+  mounted() {
+    this.el.addEventListener("click", () => {
+      this.el.querySelector("input").click();
+    });
+  },
+};
+
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },

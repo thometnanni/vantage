@@ -11,38 +11,6 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       <.header>
         {@title}
       </.header>
-      <section class="h-32 bg-gray-200" phx-drop-target={@uploads.media.ref}>
-        <%!-- render each media entry --%>
-        <article :for={entry <- @uploads.media.entries} class="upload-entry">
-          <figure class="h-32">
-            <.live_img_preview class="h-32" entry={entry} />
-            <figcaption>{entry.client_name}</figcaption>
-          </figure>
-
-          <%!-- entry.progress will update automatically for in-flight entries --%>
-          <progress value={entry.progress} max="100">{entry.progress}%</progress>
-
-          <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
-          <button
-            type="button"
-            phx-click="cancel-upload"
-            phx-value-ref={entry.ref}
-            aria-label="cancel"
-          >
-            &times;
-          </button>
-
-          <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
-          <p :for={err <- upload_errors(@uploads.media, entry)} class="alert alert-danger">
-            {error_to_string(err)}
-          </p>
-        </article>
-
-        <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
-        <p :for={err <- upload_errors(@uploads.media)} class="alert alert-danger">
-          {error_to_string(err)}
-        </p>
-      </section>
 
       <.simple_form
         for={@form}
@@ -58,7 +26,52 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
           placeholder={get_filename(@uploads.media)}
         />
         <%!-- <.input field={@form[:file]} type="text" label="File" /> --%>
-        <.live_file_input upload={@uploads.media} />
+
+        <section
+          class="h-32 bg-gray-200"
+          phx-drop-target={@uploads.media.ref}
+          phx-hook="OpenFileDialogue"
+          id="drop-target"
+        >
+          <.live_file_input upload={@uploads.media} class="hidden" />
+          <%!-- render each media entry --%>
+          <%= if @uploads.media.entries != [] do %>
+            <article :for={entry <- @uploads.media.entries} class="upload-entry">
+              <.live_img_preview class="h-32" entry={entry} />
+
+              <%!-- entry.progress will update automatically for in-flight entries --%>
+              <progress value={entry.progress} max="100">{entry.progress}%</progress>
+
+              <%!-- a regular click event whose handler will invoke Phoenix.LiveView.cancel_upload/3 --%>
+              <button
+                type="button"
+                phx-click="cancel-upload"
+                phx-value-ref={entry.ref}
+                aria-label="cancel"
+              >
+                &times;
+              </button>
+
+              <%!-- Phoenix.Component.upload_errors/2 returns a list of error atoms --%>
+              <p :for={err <- upload_errors(@uploads.media, entry)} class="alert alert-danger">
+                {error_to_string(err)}
+              </p>
+            </article>
+          <% else %>
+            <article class="upload-entry">
+              <%= if @projection.file do %>
+                <img class="h-32" src={@projection.file} />
+              <% else %>
+                <div>Drop or select file</div>
+              <% end %>
+            </article>
+          <% end %>
+
+          <%!-- Phoenix.Component.upload_errors/1 returns a list of error atoms --%>
+          <p :for={err <- upload_errors(@uploads.media)} class="alert alert-danger">
+            {error_to_string(err)}
+          </p>
+        </section>
         <div>
           <label>Projection Type</label>
           <.radio_group field={@form[:projection_type]}>
@@ -72,14 +85,17 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
           <.button phx-disable-with="Saving...">Save Projection</.button>
           <.button
             :if={@action == :edit}
+            type="button"
             phx-click={
               JS.push("delete",
                 value: %{
-                  id: @projection.id,
-                  file: @projection.file,
+                  projection: @projection.id,
                   investigation_id: @investigation_id
-                }
+                },
+                target: @myself
               )
+              |> hide("##{@projection.id}")
+              |> hide("#item-#{@projection.id}")
             }
             data-confirm="Are you sure?"
           >
@@ -152,6 +168,46 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       end
 
     save_projection(socket, socket.assigns.action, projection_params)
+  end
+
+  @impl true
+  def handle_event(
+        "delete",
+        %{"projection" => id, "investigation_id" => investigation_id},
+        socket
+      ) do
+    projection = Projections.get_projection!(id)
+
+    if projection.file do
+      file_path =
+        Path.join([:code.priv_dir(:vantage), "static", "uploads", Path.basename(projection.file)])
+
+      if File.exists?(file_path) do
+        File.rm!(file_path)
+      end
+    end
+
+    case Projections.delete_projection(projection) do
+      {:ok, projection} ->
+        notify_parent({:deleted, projection})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Projection deleted")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+
+    # Logger.warning(~p"/investigations/#{investigation_id}")
+
+    # {
+    #   :noreply,
+    #   socket
+    #   |> stream_delete(:projections, projection)
+    #   #  |> push_patch(to: ~p"/investigations/#{investigation_id}/projections", replace: true)
+    # }
   end
 
   @impl true

@@ -29,6 +29,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
             "h-12 flex items-center justify-between",
             @item_id == item.id && "!bg-brand"
           ]}
+          id={"item-#{item.id}"}
         >
           <.link
             patch={
@@ -55,13 +56,6 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
                   />
                 <% end %>
               </div>
-              <%!-- <video
-                :if={@type == :projections and item.file =~ ~r/\.(mp4|webm|ogg)$/}
-                src={item.file}
-                class="h-8 w-8"
-                muted
-              />
-              <img :if={@type == :projections and item.file !~ ~r/\.(mp4|webm|ogg)$/} src={item.file} class="h-8 w-8" /> --%>
               {item.name}
             </div>
           </.link>
