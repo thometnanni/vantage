@@ -6,7 +6,7 @@ defmodule Vantage.Projections.Projection do
   @foreign_key_type :binary_id
   schema "projections" do
     field :name, :string
-    field :time, :float
+    field :time, :float, default: 0.0
     field :file, :string
 
     field :projection_type, Ecto.Enum,
@@ -23,6 +23,7 @@ defmodule Vantage.Projections.Projection do
   def changeset(projection, attrs) do
     projection
     |> cast(attrs, [:name, :file, :projection_type, :time, :investigation_id])
-    |> validate_required([:name, :file, :projection_type, :time, :investigation_id])
+    # |> validate_required([:name, :file, :projection_type, :time, :investigation_id])
+    |> validate_required([:projection_type, :time, :investigation_id])
   end
 end

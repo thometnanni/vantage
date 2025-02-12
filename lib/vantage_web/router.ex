@@ -76,8 +76,14 @@ defmodule VantageWeb.Router do
       live "/investigations/:id/projections", InvestigationLive.Edit, :projections
 
       live "/investigations/:investigation_id/projections/list", ProjectionLive.Index, :index
-      live "/investigations/:investigation_id/projections/new", ProjectionLive.Index, :new
-      live "/investigations/:investigation_id/projections/:id/edit", ProjectionLive.Index, :edit
+
+      live "/investigations/:id/projections/new",
+           InvestigationLive.Edit,
+           :projections_new
+
+      live "/investigations/:id/projections/:projection_id/edit",
+           InvestigationLive.Edit,
+           :projections_edit
 
       live "/investigations/:id/projections/:projection_id", InvestigationLive.Edit, :projections
 

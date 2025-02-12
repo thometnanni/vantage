@@ -26,7 +26,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
         <div
           :for={item <- @items}
           class={[
-            "h-12 flex items-center justify-between bg-gray-100",
+            "h-12 flex items-center justify-between",
             @item_id == item.id && "!bg-brand"
           ]}
         >
@@ -45,13 +45,13 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
                 <%= if item.file =~ ~r/\.(mp4|webm|ogg)$/ do %>
                   <video
                     src={item.file}
-                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain"
+                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain overflow-hidden"
                     muted
                   />
                 <% else %>
                   <img
                     src={item.file}
-                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain"
+                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain overflow-hidden"
                   />
                 <% end %>
               </div>
@@ -73,7 +73,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
               end
             }
             replace
-            class="p-2 w-8"
+            class="p-2 w-8 flex justify center"
           >
             •••
           </.link>

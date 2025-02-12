@@ -1,4 +1,5 @@
-defmodule VantageWeb.ProjectionLive.FormComponent do
+defmodule VantageWeb.InvestigationLive.ModalFormComponent do
+  require Logger
   use VantageWeb, :live_component
 
   alias Vantage.Projections
@@ -9,14 +10,12 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
     <div>
       <.header>
         {@title}
-        <:subtitle>Use this form to manage projection records in your database.</:subtitle>
       </.header>
-
-      <section phx-drop-target={@uploads.media.ref}>
+      <section class="h-32 bg-gray-200" phx-drop-target={@uploads.media.ref}>
         <%!-- render each media entry --%>
         <article :for={entry <- @uploads.media.entries} class="upload-entry">
-          <figure>
-            <.live_img_preview entry={entry} />
+          <figure class="h-32">
+            <.live_img_preview class="h-32" entry={entry} />
             <figcaption>{entry.client_name}</figcaption>
           </figure>
 
@@ -52,7 +51,12 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input
+          field={@form[:name]}
+          type="text"
+          label="Name"
+          placeholder={get_filename(@uploads.media)}
+        />
         <%!-- <.input field={@form[:file]} type="text" label="File" /> --%>
         <.live_file_input upload={@uploads.media} />
         <div>
@@ -63,7 +67,7 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
             <:radio value="map">map</:radio>
           </.radio_group>
         </div>
-        <.input field={@form[:time]} type="number" label="Time" step="any" />
+        <%!-- <.input field={@form[:time]} type="number" label="Time" step="any" /> --%>
         <:actions>
           <.button phx-disable-with="Saving...">Save Projection</.button>
           <.button
@@ -89,14 +93,16 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
 
   @impl true
   def update(%{projection: projection} = assigns, socket) do
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Projections.change_projection(projection))
-     end)
-     |> assign(:uploaded_files, [])
-     |> allow_upload(:media, accept: ~w(.png .jpg .jpeg .gif .mp4 .webm), max_entries: 1)}
+    {
+      :ok,
+      socket
+      |> assign(assigns)
+      |> assign_new(:form, fn ->
+        to_form(Projections.change_projection(projection))
+      end)
+      |> assign(:uploaded_files, [])
+      |> allow_upload(:media, accept: ~w(.png .jpg .jpeg .gif .mp4 .webm), max_entries: 1)
+    }
   end
 
   @impl true
@@ -118,7 +124,6 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
             "#{Path.basename(path)}-#{entry.client_name}"
           ])
 
-        # You will need to create `priv/static/uploads` for `File.cp!/2` to work.
         File.cp!(path, dest)
         {:ok, ~p"/uploads/#{Path.basename(dest)}"}
       end)
@@ -135,6 +140,13 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
     projection_params =
       if media_file do
         Map.put(projection_params, "file", media_file)
+      else
+        projection_params
+      end
+
+    projection_params =
+      if projection_params["name"] == nil or projection_params["name"] == "" do
+        Map.put(projection_params, "name", get_filename(socket.assigns.uploads[:media]))
       else
         projection_params
       end
@@ -177,6 +189,13 @@ defmodule VantageWeb.ProjectionLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp get_filename(upload) do
+    if upload.entries != [] do
+      filename = Enum.at(upload.entries, 0).client_name
+      Path.basename(filename, Path.extname(filename))
     end
   end
 

@@ -1,7 +1,7 @@
 <main class={[
   "flex-grow grid grid-rows-[1fr_64px] overflow-hidden h-full w-full",
-  @live_action != :view && "grid-cols-[1fr_350px]",
-  @live_action == :view && "grid-cols-1"
+  @inspector_panel && "grid-cols-[1fr_350px]",
+  !@inspector_panel && "grid-cols-1"
 ]}>
   <%!-- <div id="renderer" class="bg-black h-full w-full overflow-hidden"> --%>
   <vantage-renderer
@@ -29,7 +29,7 @@
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @live_action == :projections &&
+          @inspector_panel == :projections &&
             "!bg-white !text-black"
         ]}
       >
@@ -40,7 +40,7 @@
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @live_action == :models &&
+          @inspector_panel == :models &&
             "!bg-white !text-black"
         ]}
       >
@@ -51,7 +51,7 @@
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @live_action == :edit &&
+          @inspector_panel == :investigation &&
             "!bg-white !text-black"
         ]}
       >
@@ -60,23 +60,23 @@
     </nav>
     <section class="p-2">
       <.live_component
-        :if={@live_action == :edit}
+        :if={@inspector_panel == :investigation}
         module={VantageWeb.InvestigationLive.FormInvestigation}
         id={@investigation.id}
         investigation={@investigation}
       />
       <.live_component
-        :if={@live_action == :models || @live_action == :projections}
+        :if={@inspector_panel == :models || @inspector_panel == :projections}
         module={VantageWeb.InvestigationLive.ListComponent}
         item_id={
-          case @live_action do
+          case @inspector_panel do
             :models -> @model_id
             :projections -> @projection_id
           end
         }
-        type={@live_action}
+        type={@inspector_panel}
         items={
-          case @live_action do
+          case @inspector_panel do
             :models -> @models
             :projections -> @projections
           end
@@ -90,19 +90,21 @@
     Timeline
   </div>
 </main>
-<%!-- <.modal
-  :if={@live_action == :edit}
-  id="investigation-modal"
+<.modal
+  :if={@live_action in [:projections_edit, :projections_new]}
+  id="projection-modal"
   show
-  on_cancel={JS.patch(~p"/investigations/#{@investigation}")}
+  on_cancel={JS.patch(~p"/investigations/#{@investigation}/projections")}
 >
   <.live_component
-    module={VantageWeb.InvestigationLive.FormComponent}
-    id={@investigation.id}
+    module={VantageWeb.InvestigationLive.ModalFormComponent}
+    id={@projection_id || :new}
     current_user={@current_user}
-    title={@page_title}
-    action={@live_action}
+    title="Projection"
+    action={@modal_action}
     investigation={@investigation}
-    patch={~p"/investigations/#{@investigation}"}
+    investigation_id={@investigation.id}
+    projection={@projection || %{}}
+    patch={~p"/investigations/#{@investigation}/projections/"}
   />
-</.modal> --%>
+</.modal>

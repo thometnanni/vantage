@@ -31,14 +31,37 @@ defmodule VantageWeb.InvestigationLive.Edit do
   @impl true
   def handle_params(params, _, socket) do
     model_id = params["model_id"]
+    model = (model_id && Models.get_model!(model_id)) || %Model{}
     projection_id = params["projection_id"]
+    projection = (projection_id && Projections.get_projection!(projection_id)) || %Projection{}
+
+    live_action = socket.assigns.live_action
+
+    inspector_panel =
+      cond do
+        live_action in [:models, :models_edit, :models_new] -> :models
+        live_action in [:projections, :projections_edit, :projections_new] -> :projections
+        live_action == :edit -> :investigation
+        true -> nil
+      end
+
+    modal_action =
+      cond do
+        live_action in [:models_edit, :projections_edit] -> :edit
+        live_action in [:models_new, :projections_new] -> :new
+        true -> nil
+      end
 
     {
       :noreply,
       socket
       |> assign(:page_title, socket.assigns.investigation.name)
+      |> assign(:inspector_panel, inspector_panel)
+      |> assign(:modal_action, modal_action)
       |> assign(:model_id, model_id)
+      |> assign(:model, model)
       |> assign(:projection_id, projection_id)
+      |> assign(:projection, projection)
       #  |> apply_action(socket.assigns.live_action, params)
     }
   end
@@ -71,6 +94,19 @@ defmodule VantageWeb.InvestigationLive.Edit do
      socket
      |> assign(:investigation, investigation)
      |> assign(:page_title, investigation.name)}
+  end
+
+  @impl true
+  def handle_info({VantageWeb.InvestigationLive.ModalFormComponent, {:saved, projection}}, socket) do
+    projections = socket.assigns.projections
+
+    updated_projections =
+      projections
+      |> Enum.reject(&(&1.id == projection.id))
+      |> Enum.concat([projection])
+
+    {:noreply, assign(socket, :projections, updated_projections)}
+    # {:noreply, stream_insert(socket, :projections, projection)}
   end
 
   @impl true

@@ -7,6 +7,10 @@
   </:actions>
 </.header>
 
+<div :for={{_id, projection} <- @streams.projections}>
+  {projection.name}
+</div>
+
 <.table
   id="projections"
   rows={@streams.projections}
@@ -33,7 +37,10 @@
   <:action :let={{id, projection}}>
     <.link
       phx-click={
-        JS.push("delete", value: %{id: projection.id, file: projection.file}) |> hide("##{id}")
+        JS.push("delete",
+          value: %{id: projection.id, file: projection.file, investigation_id: @investigation_id}
+        )
+        |> hide("##{id}")
       }
       data-confirm="Are you sure?"
     >
