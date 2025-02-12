@@ -8,7 +8,12 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
     <div class="flex flex-col gap-2">
       <div class="flex gap-2 justify-end">
         <.link :if={@type == :models} patch={~p"/investigations/#{@id}/models/new"} replace>
-          <div role="button" class="bg-black text-white py-1 px-2 rounded-full">Add Model</div>
+          <div
+            role="button"
+            class="bg-black text-white flex items-center justify-center py-1 px-2 h-8 w-8 rounded-full"
+          >
+            +
+          </div>
         </.link>
         <.link :if={@type == :projections} patch={~p"/investigations/#{@id}/projections/new"} replace>
           <div
