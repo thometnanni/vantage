@@ -44,16 +44,9 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
             <div class="flex items-center gap-2">
               <div :if={@type == :projections}>
                 <%= if item.file =~ ~r/\.(mp4|webm|ogg)$/ do %>
-                  <video
-                    src={item.file}
-                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain overflow-hidden"
-                    muted
-                  />
+                  <video src={item.file} class="h-12 w-12 object-cover overflow-hidden" muted />
                 <% else %>
-                  <img
-                    src={item.file}
-                    class="h-12 w-12 object-cover hover:scale-[2] hover:object-contain overflow-hidden"
-                  />
+                  <img src={item.file} class="h-12 w-12 object-cover overflow-hidden" />
                 <% end %>
               </div>
               <div class="whitespace-nowrap overflow-hidden flex-1 text-ellipsis">{item.name}</div>
