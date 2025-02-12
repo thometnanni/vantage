@@ -37,18 +37,32 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
     live_action = socket.assigns.live_action
 
+    panel_action =
+      cond do
+        live_action in [:models, :model, :model_edit, :model_new] ->
+          :models
+
+        live_action in [:projections, :projection, :projection_edit, :projection_new] ->
+          :projections
+
+        live_action == :edit ->
+          :investigation
+
+        true ->
+          nil
+      end
+
     type =
       cond do
-        live_action in [:models, :models_edit, :models_new] -> :models
-        live_action in [:projections, :projections_edit, :projections_new] -> :projections
-        live_action == :edit -> :investigation
+        live_action in [:model, :model_edit, :model_new] -> :model
+        live_action in [:projection, :projection_edit, :projection_new] -> :projection
         true -> nil
       end
 
     modal_action =
       cond do
-        live_action in [:models_edit, :projections_edit] -> :edit
-        live_action in [:models_new, :projections_new] -> :new
+        live_action in [:model_edit, :projection_edit] -> :edit
+        live_action in [:model_new, :projection_new] -> :new
         true -> nil
       end
 
@@ -58,6 +72,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
       |> assign(:page_title, socket.assigns.investigation.name)
       |> assign(:type, type)
       |> assign(:modal_action, modal_action)
+      |> assign(:panel_action, panel_action)
       |> assign(:model_id, model_id)
       |> assign(:model, model)
       |> assign(:projection_id, projection_id)

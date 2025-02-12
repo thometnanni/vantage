@@ -109,10 +109,10 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
   @impl true
   def update(%{item: item, id: id, type: type} = assigns, socket) do
     title =
-      "#{(id == :new && "New") || "Edit"} #{(type == :projections && "projection") || "model"}"
+      "#{(id == :new && "New") || "Edit"} #{(type == :projection && "projection") || "model"}"
 
     save_string =
-      "#{(id == :new && "Create") || "Save"} #{(type == :projections && "projection") || "model"}"
+      "#{(id == :new && "Create") || "Save"} #{(type == :projection && "projection") || "model"}"
 
     {
       :ok,
@@ -120,10 +120,10 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       |> assign(assigns)
       |> assign_new(:form, fn ->
         case type do
-          :projections ->
+          :projection ->
             to_form(Projections.change_projection(item))
 
-          :models ->
+          :model ->
             to_form(Models.change_model(item))
         end
       end)
@@ -133,10 +133,10 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       |> allow_upload(:media,
         accept:
           case type do
-            :projections ->
+            :projection ->
               ~w(.png .jpg .jpeg .gif .mp4 .webm)
 
-            :models ->
+            :model ->
               ~w(.gltf .glb)
           end,
         max_entries: 1
@@ -148,8 +148,8 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
   def handle_event("validate", params, socket) do
     changeset =
       case socket.assigns.type do
-        :projections -> Projections.change_projection(socket.assigns.item, params["projection"])
-        :models -> Models.change_model(socket.assigns.item, params["model"])
+        :projection -> Projections.change_projection(socket.assigns.item, params["projection"])
+        :model -> Models.change_model(socket.assigns.item, params["model"])
       end
 
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
@@ -183,8 +183,8 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
     item_params =
       case socket.assigns.type do
-        :projections -> params["projection"]
-        :models -> params["model"]
+        :projection -> params["projection"]
+        :model -> params["model"]
       end
 
     item_params =
@@ -212,8 +212,8 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       ) do
     item =
       case socket.assigns.type do
-        :projections -> Projections.get_projection!(id)
-        :models -> Models.get_model!(id)
+        :projection -> Projections.get_projection!(id)
+        :model -> Models.get_model!(id)
       end
 
     if item.file do
@@ -227,16 +227,16 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
     deletion =
       case socket.assigns.type do
-        :projections -> Projections.delete_projection(item)
-        :models -> Models.delete_model(item)
+        :projection -> Projections.delete_projection(item)
+        :model -> Models.delete_model(item)
       end
 
     case deletion do
       {:ok, item} ->
         notify_parent(
           {case socket.assigns.type do
-             :projections -> :deleted_projection
-             :models -> :deleted_model
+             :projection -> :deleted_projection
+             :model -> :deleted_model
            end, item}
         )
 
@@ -254,7 +254,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
     {:noreply, cancel_upload(socket, :media, ref)}
   end
 
-  defp save_item(socket, :edit, :projections, projection_params) do
+  defp save_item(socket, :edit, :projection, projection_params) do
     case Projections.update_projection(socket.assigns.item, projection_params) do
       {:ok, projection} ->
         notify_parent({:saved_projection, projection})
@@ -269,7 +269,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
     end
   end
 
-  defp save_item(socket, :edit, :models, model_params) do
+  defp save_item(socket, :edit, :model, model_params) do
     case Models.update_model(socket.assigns.item, model_params) do
       {:ok, model} ->
         notify_parent({:saved_model, model})
@@ -284,7 +284,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
     end
   end
 
-  defp save_item(socket, :new, :projections, projection_params) do
+  defp save_item(socket, :new, :projection, projection_params) do
     investigation_id = socket.assigns.investigation_id
     projection_params = Map.put(projection_params, "investigation_id", investigation_id)
 
@@ -302,7 +302,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
     end
   end
 
-  defp save_item(socket, :new, :models, model_params) do
+  defp save_item(socket, :new, :model, model_params) do
     investigation_id = socket.assigns.investigation_id
     model_params = Map.put(model_params, "investigation_id", investigation_id)
 

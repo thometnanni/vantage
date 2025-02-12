@@ -1,7 +1,7 @@
 <main class={[
   "flex-grow grid grid-rows-[1fr_64px] overflow-hidden h-full w-full",
-  @type && "grid-cols-[1fr_350px]",
-  !@type && "grid-cols-1"
+  @panel_action && "grid-cols-[1fr_350px]",
+  !@panel_action && "grid-cols-1"
 ]}>
   <%!-- <div id="renderer" class="bg-black h-full w-full overflow-hidden"> --%>
   <vantage-renderer
@@ -22,14 +22,14 @@
     </vantage-projection>
   </vantage-renderer>
   <%!-- </div> --%>
-  <div :if={@live_action != :view} id="inspector" class="row-span-2 flex flex-col">
+  <div :if={@panel_action} id="inspector" class="row-span-2 flex flex-col">
     <nav class="flex items-center justify-stretch bg-white text-black gap-[1px] border-t border-white">
       <.link
         patch={~p"/investigations/#{@investigation.id}/projections"}
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @type == :projections &&
+          @panel_action == :projections &&
             "!bg-white !text-black"
         ]}
       >
@@ -40,7 +40,7 @@
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @type == :models &&
+          @panel_action == :models &&
             "!bg-white !text-black"
         ]}
       >
@@ -51,7 +51,7 @@
         replace
         class={[
           "px-2.5 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 flex justify-center flex-grow",
-          @type == :investigation &&
+          @panel_action == :investigation &&
             "!bg-white !text-black"
         ]}
       >
@@ -60,23 +60,23 @@
     </nav>
     <section class="p-2">
       <.live_component
-        :if={@type == :investigation}
+        :if={@panel_action == :investigation}
         module={VantageWeb.InvestigationLive.FormInvestigation}
         id={@investigation.id}
         investigation={@investigation}
       />
       <.live_component
-        :if={@type == :models || @type == :projections}
+        :if={@panel_action == :models || @panel_action == :projections}
         module={VantageWeb.InvestigationLive.ListComponent}
         item_id={
-          case @type do
+          case @panel_action do
             :models -> @model_id
             :projections -> @projection_id
           end
         }
-        type={@type}
+        type={@panel_action}
         items={
-          case @type do
+          case @panel_action do
             :models -> @models
             :projections -> @projections
           end
@@ -91,16 +91,16 @@
   </div>
 </main>
 <.modal
-  :if={@type in [:projections, :models] && @modal_action in [:edit, :new]}
+  :if={@type in [:projection, :model] && @modal_action in [:edit, :new]}
   id="projection-modal"
   show
   on_cancel={
     JS.patch(
       case @live_action do
-        :models_edit -> ~p"/investigations/#{@investigation}/models/#{@model_id}"
-        :models_new -> ~p"/investigations/#{@investigation}/models"
-        :projections_edit -> ~p"/investigations/#{@investigation}/projections/#{@projection_id}"
-        :projections_new -> ~p"/investigations/#{@investigation}/projections"
+        :model_edit -> ~p"/investigations/#{@investigation}/models/#{@model_id}"
+        :model_new -> ~p"/investigations/#{@investigation}/models"
+        :projection_edit -> ~p"/investigations/#{@investigation}/projections/#{@projection_id}"
+        :projection_new -> ~p"/investigations/#{@investigation}/projections"
       end
     )
   }
@@ -115,14 +115,14 @@
     investigation_id={@investigation.id}
     item={
       case @type do
-        :models -> @model
-        :projections -> @projection
+        :model -> @model
+        :projection -> @projection
       end
     }
     patch={
       case @type do
-        :models -> ~p"/investigations/#{@investigation}/models/"
-        :projections -> ~p"/investigations/#{@investigation}/projections/"
+        :model -> ~p"/investigations/#{@investigation}/models/"
+        :projection -> ~p"/investigations/#{@investigation}/projections/"
       end
     }
   />
