@@ -57,14 +57,14 @@ defmodule VantageWeb.InvestigationLive.FormInvestigation do
         {
           :noreply,
           socket
-          |> assign(:investigation_form, to_form(changeset))
+          |> assign(:form, to_form(changeset))
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
          socket
          |> put_flash(:error, "Error updating investigation")
-         |> assign(:investigation_form, to_form(changeset))}
+         |> assign(:form, to_form(changeset))}
     end
   end
 

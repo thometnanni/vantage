@@ -34,7 +34,7 @@ defmodule Vantage.Projections do
       [%Projection{}, ...]
 
   """
-  def list_projections_and_keyframes(investigation_id) do
+  def list_projections_with_keyframes(investigation_id) do
     query =
       from p in Projection,
         where: p.investigation_id == ^investigation_id
@@ -57,6 +57,23 @@ defmodule Vantage.Projections do
 
   """
   def get_projection!(id), do: Repo.get!(Projection, id)
+
+  @doc """
+  Gets a single projection.
+
+  Raises `Ecto.NoResultsError` if the Projection does not exist.
+
+  ## Examples
+
+      iex> get_projection!(123)
+      %Projection{}
+
+      iex> get_projection!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_projection_with_keyframes!(id),
+    do: Repo.get!(Projection, id) |> Repo.preload(:keyframes)
 
   @doc """
   Creates a projection.

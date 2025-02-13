@@ -19,7 +19,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
     models = Models.list_models(id)
 
     projections =
-      Projections.list_projections_and_keyframes(id)
+      Projections.list_projections_with_keyframes(id)
 
     # Logger.warning(inspect(projections))
 
@@ -35,7 +35,10 @@ defmodule VantageWeb.InvestigationLive.Edit do
     model_id = params["model_id"]
     model = (model_id && Models.get_model!(model_id)) || %Model{}
     projection_id = params["projection_id"]
-    projection = (projection_id && Projections.get_projection!(projection_id)) || %Projection{}
+
+    projection =
+      (projection_id && Projections.get_projection_with_keyframes!(projection_id)) ||
+        %Projection{}
 
     live_action = socket.assigns.live_action
 
@@ -115,9 +118,43 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   @impl true
   def handle_info(
+        {VantageWeb.InvestigationLive.ProjectionInspector, {:saved, projection}},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> assign(:projection, projection)}
+  end
+
+  @impl true
+  def handle_info(
+        {VantageWeb.InvestigationLive.ProjectionInspector, {:saved_keyframe, keyframe}},
+        socket
+      ) do
+    projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+
+    projections = socket.assigns.projections
+
+    updated_projections =
+      if Enum.any?(projections, &(&1.id == projection.id)) do
+        projections
+        |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+      else
+        projections ++ [projection]
+      end
+
+    {:noreply,
+     socket
+     |> assign(:projection, projection)
+     |> assign(:projections, updated_projections)}
+  end
+
+  @impl true
+  def handle_info(
         {VantageWeb.InvestigationLive.ModalFormComponent, {:saved_projection, projection}},
         socket
       ) do
+    projection = Projections.get_projection_with_keyframes!(projection.id)
     projections = socket.assigns.projections
 
     updated_projections =
@@ -194,5 +231,17 @@ defmodule VantageWeb.InvestigationLive.Edit do
     {:noreply,
      socket
      |> push_patch(to: ~p"/investigations/#{socket.assigns.investigation.id}/projections/#{id}")}
+  end
+
+  defp get_position_string(keyframe) do
+    "#{keyframe.position_x || 0} #{keyframe.position_y || 0} #{keyframe.position_z || 0}"
+  end
+
+  defp get_rotation_string(keyframe) do
+    "#{degrees_to_radians(keyframe.rotation_x || 0)} #{degrees_to_radians(keyframe.rotation_y || 0)} #{degrees_to_radians(keyframe.rotation_z || 0)}"
+  end
+
+  defp degrees_to_radians(degrees) do
+    degrees * :math.pi() / 180
   end
 end

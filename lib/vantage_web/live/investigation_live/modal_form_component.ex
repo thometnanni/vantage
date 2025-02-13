@@ -288,16 +288,11 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
     investigation_id = socket.assigns.investigation_id
     projection_params = Map.put(projection_params, "investigation_id", investigation_id)
 
+    {:noreply, socket}
+
     case Projections.create_projection(projection_params) do
       {:ok, projection} ->
-        keyframe = %{
-          position: [10, 1.75, 30],
-          time: 0,
-          rotation: [0, 0.5, 0],
-          far: 150,
-          fov: 60,
-          projection_id: projection.id
-        }
+        keyframe = Map.from_struct(%Keyframes.Keyframe{projection_id: projection.id})
 
         case Keyframes.create_keyframe(keyframe) do
           {:ok, _} ->
