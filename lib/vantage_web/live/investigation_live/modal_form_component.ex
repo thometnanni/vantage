@@ -2,7 +2,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
   require Logger
   use VantageWeb, :live_component
 
-  alias Vantage.{Projections, Models}
+  alias Vantage.{Projections, Models, Keyframes}
 
   @impl true
   def render(assigns) do
@@ -207,7 +207,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
   @impl true
   def handle_event(
         "delete",
-        %{"id" => id, "investigation_id" => investigation_id},
+        %{"id" => id},
         socket
       ) do
     item =
@@ -242,7 +242,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
         {:noreply,
          socket
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_patch(to: socket.assigns.patch, replace: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -262,7 +262,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Projection updated successfully")
-         |> push_patch(to: "#{socket.assigns.patch}/#{projection.id}")}
+         |> push_patch(to: "#{socket.assigns.patch}/#{projection.id}", replace: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -277,7 +277,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Model updated successfully")
-         |> push_patch(to: "#{socket.assigns.patch}/#{model.id}")}
+         |> push_patch(to: "#{socket.assigns.patch}/#{model.id}", replace: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -290,12 +290,27 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
     case Projections.create_projection(projection_params) do
       {:ok, projection} ->
-        notify_parent({:saved_projection, projection})
+        keyframe = %{
+          position: [10, 1.75, 30],
+          time: 0,
+          rotation: [0, 0.5, 0],
+          far: 150,
+          fov: 60,
+          projection_id: projection.id
+        }
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Projection created successfully")
-         |> push_patch(to: "#{socket.assigns.patch}/#{projection.id}")}
+        case Keyframes.create_keyframe(keyframe) do
+          {:ok, _} ->
+            notify_parent({:saved_projection, projection})
+
+            {:noreply,
+             socket
+             |> put_flash(:info, "Projection created successfully")
+             |> push_patch(to: "#{socket.assigns.patch}/#{projection.id}", replace: true)}
+
+          {:error, %Ecto.Changeset{} = _} ->
+            {:noreply, put_flash(socket, :error, "Error creating projection")}
+        end
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -313,7 +328,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Model created successfully")
-         |> push_patch(to: "#{socket.assigns.patch}/#{model.id}")}
+         |> push_patch(to: "#{socket.assigns.patch}/#{model.id}", replace: true)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}

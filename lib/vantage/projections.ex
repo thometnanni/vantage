@@ -9,7 +9,7 @@ defmodule Vantage.Projections do
   alias Vantage.Projections.Projection
 
   @doc """
-  Returns the list of projections.
+  Returns the list of projections belonging to the specified investigation.
 
   ## Examples
 
@@ -23,6 +23,23 @@ defmodule Vantage.Projections do
         where: p.investigation_id == ^investigation_id
 
     Repo.all(query)
+  end
+
+  @doc """
+  Returns the list of projections belonging to the specified investigation with keyframe associations
+
+  ## Examples
+
+      iex> list_projections()
+      [%Projection{}, ...]
+
+  """
+  def list_projections_and_keyframes(investigation_id) do
+    query =
+      from p in Projection,
+        where: p.investigation_id == ^investigation_id
+
+    Repo.all(query) |> Repo.preload(:keyframes)
   end
 
   @doc """

@@ -44,7 +44,7 @@ defmodule VantageWeb.ProjectionLive.Index do
   @impl true
   def handle_event(
         "delete",
-        %{"id" => id, "file" => file, "investigation_id" => investigation_id},
+        %{"id" => id, "file" => file},
         socket
       ) do
     if file do

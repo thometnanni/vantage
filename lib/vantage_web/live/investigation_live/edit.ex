@@ -19,7 +19,9 @@ defmodule VantageWeb.InvestigationLive.Edit do
     models = Models.list_models(id)
 
     projections =
-      Projections.list_projections(id)
+      Projections.list_projections_and_keyframes(id)
+
+    # Logger.warning(inspect(projections))
 
     {:ok,
      socket
