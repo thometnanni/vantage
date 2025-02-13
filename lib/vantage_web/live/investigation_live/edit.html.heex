@@ -15,7 +15,12 @@
       screen={projection.projection_type != :map}
       projection-type={projection.projection_type}
       position={get_position_string(Enum.at(projection.keyframes, 0))}
-      far={Enum.at(projection.keyframes, 0).far}
+      far={
+        case projection.projection_type do
+          :map -> nil
+          _ -> Enum.at(projection.keyframes, 0).far
+        end
+      }
       fov={Enum.at(projection.keyframes, 0).fov}
       rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
       id={projection.id}
