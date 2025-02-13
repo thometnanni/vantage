@@ -31,16 +31,16 @@ let csrfToken = document
 let Hooks = {};
 
 Hooks.ProjectionUpdate = {
-  projection_id() {
-    return this.el.dataset.projectionId;
-  },
+  // projection_id() {
+  //   return this.el.dataset.projectionId;
+  // },
   keyframe_id() {
     return this.el.dataset.keyframeId;
   },
   mounted(e) {
-    this.el.addEventListener("vantage:set-focus", (e) => {
-      this.pushEvent("vantage:set-focus", { id: this.projection_id() });
-    });
+    // this.el.addEventListener("vantage:set-focus", (e) => {
+    //   this.pushEvent("vantage:set-focus", { id: this.projection_id() });
+    // });
     this.el.addEventListener("vantage:set-position", (e) => {
       const [position_x, position_y, position_z] = e.detail.position;
       this.pushEvent("vantage:set-position", {
