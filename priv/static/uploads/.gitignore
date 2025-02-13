@@ -1,0 +1,3 @@
+# Ignore uploads but ensure this "empty" folder is in the repo
+*
+!.gitignore
