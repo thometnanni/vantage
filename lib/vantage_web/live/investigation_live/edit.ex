@@ -9,7 +9,9 @@ defmodule VantageWeb.InvestigationLive.Edit do
     Models,
     Models.Model,
     Projections,
-    Projections.Projection
+    Projections.Projection,
+    Keyframes,
+    Keyframes.Keyframe
   }
 
   @impl true
@@ -231,6 +233,38 @@ defmodule VantageWeb.InvestigationLive.Edit do
     {:noreply,
      socket
      |> push_patch(to: ~p"/investigations/#{socket.assigns.investigation.id}/projections/#{id}")}
+  end
+
+  def handle_event(
+        "vantage:set-position",
+        %{"id" => id} = attrs,
+        socket
+      ) do
+    keyframe = Keyframes.get_keyframe!(id)
+    projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+    Keyframes.update_keyframe(keyframe, attrs)
+
+    projections =
+      socket.assigns.projections
+      |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+
+    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+  end
+
+  def handle_event(
+        "vantage:set-rotation",
+        %{"id" => id} = attrs,
+        socket
+      ) do
+    keyframe = Keyframes.get_keyframe!(id)
+    projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+    Keyframes.update_keyframe(keyframe, attrs)
+
+    projections =
+      socket.assigns.projections
+      |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+
+    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
   end
 
   defp get_position_string(keyframe) do

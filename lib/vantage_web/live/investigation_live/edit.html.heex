@@ -12,17 +12,17 @@
     <vantage-projection
       :for={projection <- @projections}
       src={projection.file}
-      orthographic={
-        projection.projection_type == :orthographic || projection.projection_type == :map
-      }
-      screen
+      screen={projection.projection_type != :map}
+      projection-type={projection.projection_type}
       position={get_position_string(Enum.at(projection.keyframes, 0))}
       far={Enum.at(projection.keyframes, 0).far}
       fov={Enum.at(projection.keyframes, 0).fov}
       rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
       id={projection.id}
       focus={projection.id == @projection_id}
-      phx-hook="SetFocus"
+      phx-hook="ProjectionUpdate"
+      data-projection-id={projection.id}
+      data-keyframe-id={Enum.at(projection.keyframes, 0).id}
     >
     </vantage-projection>
   </vantage-renderer>

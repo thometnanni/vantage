@@ -30,10 +30,34 @@ let csrfToken = document
 
 let Hooks = {};
 
-Hooks.SetFocus = {
-  mounted() {
+Hooks.ProjectionUpdate = {
+  projection_id() {
+    return this.el.dataset.projectionId;
+  },
+  keyframe_id() {
+    return this.el.dataset.keyframeId;
+  },
+  mounted(e) {
     this.el.addEventListener("vantage:set-focus", (e) => {
-      this.pushEvent("vantage:set-focus", { id: e.detail.id });
+      this.pushEvent("vantage:set-focus", { id: this.projection_id() });
+    });
+    this.el.addEventListener("vantage:set-position", (e) => {
+      const [position_x, position_y, position_z] = e.detail.position;
+      this.pushEvent("vantage:set-position", {
+        id: this.keyframe_id(),
+        position_x,
+        position_y,
+        position_z,
+      });
+    });
+    this.el.addEventListener("vantage:set-rotation", (e) => {
+      const [rotation_x, rotation_y, rotation_z] = e.detail.rotation;
+      this.pushEvent("vantage:set-rotation", {
+        id: this.keyframe_id(),
+        rotation_x,
+        rotation_y,
+        rotation_z,
+      });
     });
   },
 };
