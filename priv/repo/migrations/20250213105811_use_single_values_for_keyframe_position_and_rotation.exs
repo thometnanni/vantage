@@ -2,7 +2,7 @@ defmodule Vantage.Repo.Migrations.UseSingleValuesForKeyframePositionAndRotation 
   use Ecto.Migration
 
   def change do
-    alter table(:keyframe) do
+    alter table(:keyframes) do
       add :position_x, :float
       add :position_y, :float
       add :position_z, :float
