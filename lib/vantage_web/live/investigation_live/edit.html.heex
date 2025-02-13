@@ -8,7 +8,6 @@
     scene={@models != [] && Enum.at(@models, 0).file}
     class="bg-black border-t border-white"
     id="renderer"
-    phx-hook="SetFocus"
   >
     <vantage-projection
       :for={projection <- @projections}
@@ -23,6 +22,7 @@
       rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
       id={projection.id}
       focus={projection.id == @projection_id}
+      phx-hook="SetFocus"
     >
     </vantage-projection>
   </vantage-renderer>
