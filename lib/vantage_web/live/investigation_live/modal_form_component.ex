@@ -139,7 +139,8 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
             :model ->
               ~w(.gltf .glb)
           end,
-        max_entries: 1
+        max_entries: 1,
+        max_file_size: 100_000_000
       )
     }
   end
