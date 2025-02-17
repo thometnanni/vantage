@@ -5,7 +5,17 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex flex-col gap-2">
+    <div
+      class="flex flex-col gap-2"
+      phx-click={
+        JS.patch(
+          case @type do
+            :models -> ~p"/investigations/#{@id}/models"
+            :projections -> ~p"/investigations/#{@id}/projections"
+          end
+        )
+      }
+    >
       <div class="flex gap-2 justify-end">
         <.link :if={@type == :models} patch={~p"/investigations/#{@id}/models/new"} replace>
           <div
