@@ -3,35 +3,48 @@
   @panel_action && "grid-cols-[1fr_350px]",
   !@panel_action && "grid-cols-1"
 ]}>
-  <%!-- <div id="renderer" class="bg-black h-full w-full overflow-hidden"> --%>
-  <vantage-renderer
-    scene={@models != [] && Enum.at(@models, 0).file}
-    class="bg-black border-t border-white"
-    id="renderer"
-  >
-    <vantage-projection
-      :for={projection <- @projections}
-      src={projection.file}
-      screen={projection.projection_type != :map}
-      projection-type={projection.projection_type}
-      position={get_position_string(Enum.at(projection.keyframes, 0))}
-      far={
-        case projection.projection_type do
-          :map -> nil
-          _ -> Enum.at(projection.keyframes, 0).far
-        end
-      }
-      fov={Enum.at(projection.keyframes, 0).fov}
-      rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
-      id={projection.id}
-      focus={projection.id == @projection_id}
-      phx-hook="ProjectionUpdate"
-      data-projection-id={projection.id}
-      data-keyframe-id={Enum.at(projection.keyframes, 0).id}
+  <div class="bg-black h-full w-full overflow-hidden relative">
+    <div
+      role="button"
+      class={[
+        "bg-black absolute text-white flex items-center justify-center py-1 px-2 h-8 right-2 top-2 ring-white ring-1 rounded-full",
+        @first_person && "!bg-brand"
+      ]}
+      phx-click={JS.push("toggle_first_person")}
     >
-    </vantage-projection>
-  </vantage-renderer>
-  <%!-- </div> --%>
+      First Person
+    </div>
+    <vantage-renderer
+      scene={@models != [] && Enum.at(@models, 0).file}
+      class="bg-black border-t border-white"
+      id="renderer"
+      first-person={@first_person}
+      controls="edit"
+      phx-hook="RendererUpdate"
+    >
+      <vantage-projection
+        :for={projection <- @projections}
+        src={projection.file}
+        screen={projection.projection_type != :map}
+        projection-type={projection.projection_type}
+        position={get_position_string(Enum.at(projection.keyframes, 0))}
+        far={
+          case projection.projection_type do
+            :map -> nil
+            _ -> Enum.at(projection.keyframes, 0).far
+          end
+        }
+        fov={Enum.at(projection.keyframes, 0).fov}
+        rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
+        id={projection.id}
+        focus={projection.id == @projection_id}
+        phx-hook="ProjectionUpdate"
+        data-projection-id={projection.id}
+        data-keyframe-id={Enum.at(projection.keyframes, 0).id}
+      >
+      </vantage-projection>
+    </vantage-renderer>
+  </div>
   <div :if={@panel_action} id="inspector" class="row-span-2 flex flex-col">
     <nav class="flex items-center justify-stretch bg-white text-black gap-[1px] border-t border-white">
       <.link

@@ -62,6 +62,14 @@ Hooks.ProjectionUpdate = {
   },
 };
 
+Hooks.RendererUpdate = {
+  mounted(e) {
+    this.el.addEventListener("vantage:unlock-first-person", () => {
+      this.pushEvent("vantage:unlock-first-person");
+    });
+  },
+};
+
 Hooks.OpenFileDialogue = {
   mounted() {
     this.el.addEventListener("click", () => {

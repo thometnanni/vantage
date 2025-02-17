@@ -10,8 +10,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
     Models.Model,
     Projections,
     Projections.Projection,
-    Keyframes,
-    Keyframes.Keyframe
+    Keyframes
   }
 
   @impl true
@@ -29,6 +28,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
      socket
      |> assign(:investigation, investigation)
      |> assign(:models, models)
+     |> assign(:first_person, false)
      |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
   end
 
@@ -227,6 +227,18 @@ defmodule VantageWeb.InvestigationLive.Edit do
          |> put_flash(:error, "Error updating investigation")
          |> assign(:investigation_form, to_form(changeset))}
     end
+  end
+
+  def handle_event("toggle_first_person", _, socket) do
+    {:noreply,
+     socket
+     |> assign(:first_person, !socket.assigns.first_person)}
+  end
+
+  def handle_event("vantage:unlock-first-person", _, socket) do
+    {:noreply,
+     socket
+     |> assign(:first_person, false)}
   end
 
   def handle_event("vantage:set-focus", %{"id" => id}, socket) do
