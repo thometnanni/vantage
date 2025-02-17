@@ -54,9 +54,9 @@ Hooks.ProjectionUpdate = {
       const [rotation_x, rotation_y, rotation_z] = e.detail.rotation;
       this.pushEvent("vantage:set-rotation", {
         id: this.keyframe_id(),
-        rotation_x,
-        rotation_y,
-        rotation_z,
+        rotation_x: rotation_x * (180 / Math.PI),
+        rotation_y: rotation_y * (180 / Math.PI),
+        rotation_z: rotation_z * (180 / Math.PI),
       });
     });
   },
