@@ -94,8 +94,6 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
 
   @impl true
   def handle_event("edit-item", %{"id" => id}, socket) do
-    Logger.warning(id)
-
     {:noreply,
      socket
      |> put_flash(:info, "inspect(unsigned_params)")}

@@ -60,7 +60,6 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
   @impl true
   def update(%{projection: projection} = assigns, socket) do
     keyframe = Enum.at(projection.keyframes, 0)
-    Logger.warning(keyframe)
 
     {:ok,
      socket

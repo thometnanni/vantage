@@ -212,6 +212,14 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
         item_params
       end
 
+    item_params =
+      if media_file && Path.extname(media_file) in ~w(.mp4 .webm) do
+        video_length = get_video_length(media_file)
+        Map.put(item_params, "duration", video_length)
+      else
+        item_params
+      end
+
     save_item(socket, socket.assigns.action, socket.assigns.type, item_params)
   end
 
@@ -357,4 +365,21 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
   defp error_to_string(:too_large), do: "Too large"
   defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
   defp error_to_string(:too_many_files), do: "You have selected too many files"
+
+  defp get_video_length(file_path) do
+    file_path = Path.join([:code.priv_dir(:vantage), "static", file_path])
+
+    case System.cmd("ffmpeg", ["-i", file_path, "-hide_banner"], stderr_to_stdout: true) do
+      {output, _status_code} ->
+        [_, hours, minutes, seconds] = Regex.run(~r/Duration: (\d+):(\d+):(\d+\.\d+)/, output)
+
+        String.to_integer(hours) * 3600 + String.to_integer(minutes) * 60 +
+          String.to_float(seconds)
+
+        # {out, status_code} ->
+        #   Logger.warning("ERRROe")
+        #   Logger.warning(inspect(status_code))
+        #   0.0
+    end
+  end
 end
