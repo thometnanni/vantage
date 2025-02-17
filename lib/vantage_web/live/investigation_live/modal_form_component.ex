@@ -29,7 +29,17 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
           <%!-- render each media entry --%>
           <%= if @uploads.media.entries != [] do %>
             <article :for={entry <- @uploads.media.entries} class="upload-entry">
-              <.live_img_preview class="h-32" entry={entry} />
+              <.live_img_preview
+                :if={get_file_extension(entry.client_name) in [".png", ".jpg", ".jpeg", ".gif"]}
+                class="h-32"
+                entry={entry}
+              />
+              <.live_video_preview
+                :if={get_file_extension(entry.client_name) in [".webm", ".mp4"]}
+                class="h-32"
+                entry={entry}
+              />
+              <%!-- <.live_img_preview class="h-32" entry={entry} /> --%>
 
               <%!-- entry.progress will update automatically for in-flight entries --%>
               <progress value={entry.progress} max="100">{entry.progress}%</progress>
@@ -336,6 +346,10 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
       filename = Enum.at(upload.entries, 0).client_name
       Path.basename(filename, Path.extname(filename))
     end
+  end
+
+  defp get_file_extension(filename) do
+    Path.extname(filename)
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

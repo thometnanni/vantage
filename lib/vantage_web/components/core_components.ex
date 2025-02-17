@@ -730,4 +730,30 @@ defmodule VantageWeb.CoreComponents do
     </div>
     """
   end
+
+  @doc """
+  Displays a video preview for a file which is being uploaded.
+
+  Example:
+
+      <.live_video_preview entry={entry} />
+  """
+  def live_video_preview(%{entry: %Phoenix.LiveView.UploadEntry{ref: ref} = entry} = assigns) do
+    rest =
+      assigns
+      |> assigns_to_attributes([:entry])
+      |> Keyword.put_new_lazy(:id, fn -> "phx-preview-#{ref}" end)
+
+    assigns = assign(assigns, entry: entry, ref: ref, rest: rest)
+
+    ~H"""
+    <video
+      data-phx-upload-ref={@entry.upload_ref}
+      data-phx-entry-ref={@ref}
+      data-phx-hook="Phoenix.LiveImgPreview"
+      data-phx-update="ignore"
+      {@rest}
+    />
+    """
+  end
 end
