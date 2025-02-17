@@ -279,6 +279,22 @@ defmodule VantageWeb.InvestigationLive.Edit do
     {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
   end
 
+  def handle_event(
+        "vantage:set-fov",
+        %{"id" => id} = attrs,
+        socket
+      ) do
+    keyframe = Keyframes.get_keyframe!(id)
+    projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+    Keyframes.update_keyframe(keyframe, attrs)
+
+    projections =
+      socket.assigns.projections
+      |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+
+    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+  end
+
   defp get_position_string(keyframe) do
     "#{keyframe.position_x || 0} #{keyframe.position_y || 0} #{keyframe.position_z || 0}"
   end

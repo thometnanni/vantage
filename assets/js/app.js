@@ -59,6 +59,13 @@ Hooks.ProjectionUpdate = {
         rotation_z: rotation_z * (180 / Math.PI),
       });
     });
+    this.el.addEventListener("vantage:set-fov", (e) => {
+      const fov = e.detail.fov;
+      this.pushEvent("vantage:set-fov", {
+        id: this.keyframe_id(),
+        fov,
+      });
+    });
   },
 };
 
