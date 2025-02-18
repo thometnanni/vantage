@@ -6,7 +6,7 @@ services:
       - "4000:4000"
     environment:
       DATABASE_URL: "postgres://postgres:postgres@db:5432/vantage_dev"
-      SECRET_KEY_BASE: "ZXYt57Sa0+aK65Yk6eKdwF9eTqXPjiKUQRgMwo+AR2maqcVRZUdcAo8/oSP/gJwC"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
       PHX_SERVER: "true"
     depends_on:
       - db
