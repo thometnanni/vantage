@@ -123,9 +123,22 @@ defmodule VantageWeb.InvestigationLive.Edit do
         {VantageWeb.InvestigationLive.ProjectionInspector, {:saved, projection}},
         socket
       ) do
+    # projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+
+    projections = socket.assigns.projections
+
+    updated_projections =
+      if Enum.any?(projections, &(&1.id == projection.id)) do
+        projections
+        |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+      else
+        projections ++ [projection]
+      end
+
     {:noreply,
      socket
-     |> assign(:projection, projection)}
+     |> assign(:projection, projection)
+     |> assign(:projections, updated_projections)}
   end
 
   @impl true

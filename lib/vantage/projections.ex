@@ -43,6 +43,42 @@ defmodule Vantage.Projections do
   end
 
   @doc """
+  Returns the highest value of p.time + p.duration from all projections with the given investigation_id.
+
+  ## Examples
+
+      iex> get_max_time(123)
+      120.5
+
+  """
+  def get_max_time(investigation_id) do
+    query =
+      from p in Projection,
+        where: p.investigation_id == ^investigation_id,
+        select: max(p.time + p.duration)
+
+    Repo.one(query)
+  end
+
+  @doc """
+  Returns the lowest value of p.time from all projections with the given investigation_id.
+
+  ## Examples
+
+      iex> get_min_time(123)
+      0.0
+
+  """
+  def get_min_time(investigation_id) do
+    query =
+      from p in Projection,
+        where: p.investigation_id == ^investigation_id,
+        select: min(p.time)
+
+    Repo.one(query)
+  end
+
+  @doc """
   Gets a single projection.
 
   Raises `Ecto.NoResultsError` if the Projection does not exist.

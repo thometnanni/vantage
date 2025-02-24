@@ -116,9 +116,13 @@
       />
     </section>
   </div>
-  <div id="timeline" class="bg-blue-200">
-    Timeline
-  </div>
+  <.live_component
+    id="timeline"
+    module={VantageWeb.InvestigationLive.TimelineComponent}
+    investigation={@investigation}
+    projections={@projections}
+    projection={@projection}
+  />
 </main>
 <.modal
   :if={@type in [:projection, :model] && @modal_action in [:edit, :new]}
