@@ -21,27 +21,34 @@
       first-person={@first_person}
       controls="edit"
       phx-hook="RendererUpdate"
+      time={0}
     >
       <vantage-projection
         :for={projection <- @projections}
         src={projection.file}
-        screen={projection.projection_type != :map}
         projection-type={projection.projection_type}
-        position={get_position_string(Enum.at(projection.keyframes, 0))}
-        far={
-          case projection.projection_type do
-            :map -> nil
-            _ -> Enum.at(projection.keyframes, 0).far
-          end
-        }
-        fov={Enum.at(projection.keyframes, 0).fov}
-        rotation={get_rotation_string(Enum.at(projection.keyframes, 0))}
         id={projection.id}
         focus={projection.id == @projection_id}
         phx-hook="ProjectionUpdate"
         data-projection-id={projection.id}
         data-keyframe-id={Enum.at(projection.keyframes, 0).id}
       >
+        <vantage-keyframe
+          :for={keyframe <- @projection.keyframes}
+          position={get_position_string(keyframe)}
+          rotation={get_rotation_string(keyframe)}
+          screen={projection.projection_type != :map}
+          time={keyframe.time}
+          far={
+            case projection.projection_type do
+              :map -> nil
+              _ -> keyframe.far
+            end
+          }
+          fov={keyframe.fov}
+          data-keyframe-id={keyframe.id}
+        >
+        </vantage-keyframe>
       </vantage-projection>
     </vantage-renderer>
   </div>
