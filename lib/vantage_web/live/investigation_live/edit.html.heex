@@ -1,5 +1,5 @@
 <main class={[
-  "flex-grow grid grid-rows-[1fr_64px] overflow-hidden h-full w-full",
+  "flex-grow grid grid-rows-[1fr_128px] overflow-hidden h-full w-full",
   @panel_action && "grid-cols-[1fr_350px]",
   !@panel_action && "grid-cols-1"
 ]}>
@@ -21,7 +21,7 @@
       first-person={@first_person}
       controls="edit"
       phx-hook="RendererUpdate"
-      time={0}
+      time="0"
     >
       <vantage-projection
         :for={projection <- @projections}
@@ -126,6 +126,7 @@
   <.live_component
     id="timeline"
     module={VantageWeb.InvestigationLive.TimelineComponent}
+    time={@time}
     investigation={@investigation}
     projections={@projections}
     projection={@projection}
@@ -155,6 +156,7 @@
     action={@modal_action}
     investigation={@investigation}
     investigation_id={@investigation.id}
+    time={@time}
     item={
       case @type do
         :model -> @model

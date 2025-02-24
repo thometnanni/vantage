@@ -305,7 +305,9 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
   defp save_item(socket, :new, :projection, projection_params) do
     investigation_id = socket.assigns.investigation_id
+
     projection_params = Map.put(projection_params, "investigation_id", investigation_id)
+    projection_params = Map.put(projection_params, "time", socket.assigns.time || 0.0)
 
     {:noreply, socket}
 

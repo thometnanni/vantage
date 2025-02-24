@@ -29,6 +29,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
      |> assign(:investigation, investigation)
      |> assign(:models, models)
      |> assign(:first_person, false)
+     |> assign(:time, 0.0)
      |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
   end
 
@@ -306,6 +307,11 @@ defmodule VantageWeb.InvestigationLive.Edit do
       |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
 
     {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+  end
+
+  def handle_event("set-time", time, socket) do
+    {:noreply, socket |> assign(:time, time)}
+    # {:noreply, socket}
   end
 
   defp get_position_string(keyframe) do

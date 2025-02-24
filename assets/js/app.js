@@ -30,6 +30,56 @@ let csrfToken = document
 
 let Hooks = {};
 
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
+const soreData = {
+  time: 0,
+};
+
+const store = new Proxy(soreData, {
+  get: function (target, prop) {
+    console.log({ type: "get", target, prop });
+    return Reflect.get(target, prop);
+  },
+  set: function (target, prop, value) {
+    console.log({ type: "set", target, prop, value });
+    if (prop === "time") {
+      const renderer = document.getElementById("renderer");
+      if (renderer) {
+        renderer.setAttribute("time", value);
+      }
+      const cursor = document.getElementById("timeline-cursor");
+      const scrubber = document.getElementById("timeline-scrubber");
+      if (cursor && scrubber) {
+        const max_time = +scrubber.dataset.maxTime;
+        const min_time = +scrubber.dataset.minTime;
+
+        const perc_time = (value - min_time) / (max_time - min_time);
+
+        cursor.style.left = `${perc_time * 100}%`;
+      }
+
+      debouncedDispatchEvent(value);
+    }
+    return Reflect.set(target, prop, value);
+  },
+});
+
+const debouncedDispatchEvent = debounce((value) => {
+  document.dispatchEvent(
+    new CustomEvent("set-time", {
+      detail: value,
+    })
+  );
+}, 300);
+
 Hooks.ProjectionUpdate = {
   // projection_id() {
   //   return this.el.dataset.projectionId;
@@ -82,6 +132,28 @@ Hooks.OpenFileDialogue = {
     this.el.addEventListener("click", () => {
       this.el.querySelector("input").click();
     });
+  },
+};
+
+Hooks.TimelineScrubber = {
+  max_time() {
+    return +this.el.dataset.maxTime;
+  },
+  min_time() {
+    return +this.el.dataset.minTime;
+  },
+  mounted() {
+    this.el.addEventListener("mousemove", (e) => {
+      const rect = this.el.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      store.time =
+        (offsetX / rect.width) * (this.max_time() - this.min_time()) +
+        this.min_time();
+    });
+
+    document.addEventListener("set-time", (e) =>
+      this.pushEvent("set-time", e.detail)
+    );
   },
 };
 
