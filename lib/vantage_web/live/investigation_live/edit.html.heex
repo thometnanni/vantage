@@ -34,7 +34,7 @@
         data-keyframe-id={Enum.at(projection.keyframes, 0).id}
       >
         <vantage-keyframe
-          :for={keyframe <- @projection.keyframes}
+          :for={keyframe <- projection.keyframes}
           position={get_position_string(keyframe)}
           rotation={get_rotation_string(keyframe)}
           screen={projection.projection_type != :map}
