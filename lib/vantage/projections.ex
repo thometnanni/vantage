@@ -57,7 +57,7 @@ defmodule Vantage.Projections do
         where: p.investigation_id == ^investigation_id,
         select: max(p.time + p.duration)
 
-    Repo.one(query)
+    Repo.one(query) || 0.0
   end
 
   @doc """
@@ -75,7 +75,7 @@ defmodule Vantage.Projections do
         where: p.investigation_id == ^investigation_id,
         select: min(p.time)
 
-    Repo.one(query)
+    Repo.one(query) || 0.0
   end
 
   @doc """

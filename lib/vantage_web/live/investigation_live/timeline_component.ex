@@ -49,9 +49,14 @@ defmodule VantageWeb.InvestigationLive.TimelineComponent do
   @impl true
   def update(assigns, socket) do
     min_time =
-      Projections.get_min_time(assigns.investigation.id) |> Float.floor() |> Kernel.min(0.0)
+      Projections.get_min_time(assigns.investigation.id)
+      |> Float.floor()
+      |> Kernel.min(0.0)
 
-    max_time = Projections.get_max_time(assigns.investigation.id) |> Float.ceil()
+    max_time =
+      Projections.get_max_time(assigns.investigation.id)
+      |> Float.ceil()
+      |> Kernel.max(10.0)
 
     # projections = Projections.list_projections(assigns.investigation.id)
 
