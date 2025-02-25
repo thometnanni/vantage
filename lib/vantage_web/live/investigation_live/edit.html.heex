@@ -35,17 +35,12 @@
       >
         <vantage-keyframe
           :for={keyframe <- projection.keyframes}
-          position={get_position_string(keyframe)}
-          rotation={get_rotation_string(keyframe)}
+          position={projection.projection_type != :map && get_position_string(keyframe)}
+          rotation={projection.projection_type != :map && get_rotation_string(keyframe)}
           screen={projection.projection_type != :map}
           time={keyframe.time}
-          far={
-            case projection.projection_type do
-              :map -> nil
-              _ -> keyframe.far
-            end
-          }
-          fov={keyframe.fov}
+          far={projection.projection_type != :map && keyframe.far}
+          fov={projection.projection_type != :map && keyframe.fov}
           data-keyframe-id={keyframe.id}
         >
         </vantage-keyframe>
