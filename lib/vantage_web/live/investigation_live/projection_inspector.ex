@@ -111,7 +111,7 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
     case Keyframes.update_keyframe(socket.assigns.keyframe, keyframe_params) do
       {:ok, keyframe} ->
         notify_parent({:saved_keyframe, keyframe})
-        changeset = Keyframes.change_keyframe(%Keyframe{})
+        changeset = Keyframes.change_keyframe(keyframe)
 
         {
           :noreply,
