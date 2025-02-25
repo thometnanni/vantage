@@ -45,11 +45,11 @@ const soreData = {
 
 const store = new Proxy(soreData, {
   get: function (target, prop) {
-    console.log({ type: "get", target, prop });
+    // console.log({ type: "get", target, prop });
     return Reflect.get(target, prop);
   },
   set: function (target, prop, value) {
-    console.log({ type: "set", target, prop, value });
+    // console.log({ type: "set", target, prop, value });
     if (prop === "time") {
       const renderer = document.getElementById("renderer");
       if (renderer) {
