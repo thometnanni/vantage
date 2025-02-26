@@ -92,7 +92,9 @@ defmodule Vantage.MixProject do
       vantage: [
         steps: [:assemble, :tar],
         include_executables_for: [:unix],
-        applications: [runtime_tools: :permanent]
+        applications: [runtime_tools: :permanent],
+        strip_beams: true,
+        include_executables_for: [:unix]
       ]
     ]
     

@@ -20,16 +20,12 @@ RUN npm install --prefix assets
 
 COPY . .
 
-RUN mix deps.get
+RUN mix deps.get && mix compile && mix phx.digest && mix release
 
-RUN mix compile
-RUN mix phx.digest
-
-RUN mix release
 
 FROM alpine:3.17 AS app
 
-RUN apk add --no-cache libstdc++ openssl ncurses-libs
+RUN apk add --no-cache libstdc++ openssl ncurses-libs ffmpeg
 
 WORKDIR /app
 
