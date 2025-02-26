@@ -5,7 +5,7 @@ secret_key_base = System.get_env("SECRET_KEY_BASE") || "default_dev_secret_key"
 config :vantage, Vantage.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "db", # Use "db" when running in Docker, "localhost" for local non-Docker setup
+  hostname: "db",
   database: "vantage_dev",
   pool_size: 10,
   ssl: false,
