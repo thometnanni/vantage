@@ -1,0 +1,26 @@
+services:
+  app:
+    image: sinanatra/vantage:latest
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/vantage_dev"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE}"
+      PHX_SERVER: "true"
+      MIX_ENV: "prod"
+    depends_on:
+      - db
+    command: sh -c "bin/vantage eval \"Vantage.Release.migrate()\" && bin/vantage start"
+
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vantage_dev
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

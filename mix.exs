@@ -9,11 +9,12 @@ defmodule Vantage.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: releases()
     ]
   end
 
-  # Configuration for the OTP application.
+ # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
   def application do
@@ -83,5 +84,17 @@ defmodule Vantage.MixProject do
         "phx.digest"
       ]
     ]
+  end
+
+  # Add this function to configure the release
+  defp releases do
+    [
+      vantage: [
+        steps: [:assemble, :tar],
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent]
+      ]
+    ]
+    
   end
 end
