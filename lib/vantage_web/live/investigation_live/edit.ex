@@ -22,8 +22,6 @@ defmodule VantageWeb.InvestigationLive.Edit do
     projections =
       Projections.list_projections_with_keyframes(id)
 
-    # Logger.warning(inspect(projections))
-
     {:ok,
      socket
      |> assign(:investigation, investigation)
@@ -40,8 +38,11 @@ defmodule VantageWeb.InvestigationLive.Edit do
     projection_id = params["projection_id"]
 
     projection =
-      (projection_id && Projections.get_projection_with_keyframes!(projection_id)) ||
+      (projection_id &&
+         Projections.get_projection_with_keyframes!(projection_id) |> sort_keyframes()) ||
         %Projection{}
+
+    keyframe = (projection_id && Enum.at(projection.keyframes, 0)) || %Keyframes.Keyframe{}
 
     live_action = socket.assigns.live_action
 
@@ -85,8 +86,14 @@ defmodule VantageWeb.InvestigationLive.Edit do
       |> assign(:model, model)
       |> assign(:projection_id, projection_id)
       |> assign(:projection, projection)
-      #  |> apply_action(socket.assigns.live_action, params)
+      |> assign(:keyframe, keyframe)
     }
+  end
+
+  defp sort_keyframes(projection) do
+    Map.update!(projection, :keyframes, fn keyframes ->
+      Enum.sort_by(keyframes, & &1.time)
+    end)
   end
 
   # defp apply_action(socket, :edit, %{"id" => id}) do
@@ -268,13 +275,17 @@ defmodule VantageWeb.InvestigationLive.Edit do
       ) do
     keyframe = Keyframes.get_keyframe!(id)
     projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
-    Keyframes.update_keyframe(keyframe, attrs)
+    {:ok, updated_keyframe} = Keyframes.update_keyframe(keyframe, attrs)
 
     projections =
       socket.assigns.projections
       |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
 
-    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+    {:noreply,
+     socket
+     |> assign(:projection, projection)
+     |> assign(:projections, projections)
+     |> assign(:keyframe, updated_keyframe)}
   end
 
   def handle_event(
@@ -284,13 +295,17 @@ defmodule VantageWeb.InvestigationLive.Edit do
       ) do
     keyframe = Keyframes.get_keyframe!(id)
     projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
-    Keyframes.update_keyframe(keyframe, attrs)
+    {:ok, updated_keyframe} = Keyframes.update_keyframe(keyframe, attrs)
 
     projections =
       socket.assigns.projections
       |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
 
-    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+    {:noreply,
+     socket
+     |> assign(:projection, projection)
+     |> assign(:projections, projections)
+     |> assign(:keyframe, updated_keyframe)}
   end
 
   def handle_event(
@@ -300,18 +315,125 @@ defmodule VantageWeb.InvestigationLive.Edit do
       ) do
     keyframe = Keyframes.get_keyframe!(id)
     projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
-    Keyframes.update_keyframe(keyframe, attrs)
+    {:ok, updated_keyframe} = Keyframes.update_keyframe(keyframe, attrs)
 
     projections =
       socket.assigns.projections
       |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
 
-    {:noreply, socket |> assign(:projection, projection) |> assign(:projections, projections)}
+    {:noreply,
+     socket
+     |> assign(:projection, projection)
+     |> assign(:projections, projections)
+     |> assign(:keyframe, updated_keyframe)}
   end
 
   def handle_event("set-time", time, socket) do
+    # Logger.warning("Setting time to #{time}")
     {:noreply, socket |> assign(:time, time)}
     # {:noreply, socket}
+  end
+
+  def handle_event("add-keyframe", _, socket) do
+    {:noreply,
+     push_event(socket, "get-focus-projection-interpolation", %{time: socket.assigns.time})}
+  end
+
+  def handle_event(
+        "vantage:create-keyframe",
+        keyframe,
+        socket
+      ) do
+    time = keyframe["time"] - socket.assigns.projection.time
+    keyframe = keyframe |> Map.put("time", time)
+
+    case Keyframes.create_keyframe(keyframe) do
+      {:ok, keyframe} ->
+        projection = Projections.get_projection_with_keyframes!(keyframe.projection_id)
+
+        projections =
+          socket.assigns.projections
+          |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+
+        {:noreply,
+         socket
+         |> assign(:projection, projection)
+         |> assign(:projections, projections)
+         |> assign(:keyframe, keyframe)}
+
+      {:error, %Ecto.Changeset{} = _} ->
+        {:noreply, put_flash(socket, :error, "Error creating keyframe")}
+    end
+  end
+
+  def handle_event(
+        "select-keyframe",
+        %{"id" => id},
+        socket
+      ) do
+    keyframe = Keyframes.get_keyframe!(id)
+    {:noreply, socket |> assign(:keyframe, keyframe)}
+  end
+
+  def handle_event("prev-keyframe", _params, socket) do
+    current_keyframe = socket.assigns.keyframe
+    keyframes = socket.assigns.projection.keyframes
+
+    index = (Enum.find_index(keyframes, fn k -> k.id == current_keyframe.id end) - 1) |> max(0)
+    keyframe = Enum.at(keyframes, index)
+
+    {:noreply,
+     socket
+     |> assign(:keyframe, keyframe)
+     |> assign(:time, keyframe.time + socket.assigns.projection.time)}
+  end
+
+  def handle_event("next-keyframe", _params, socket) do
+    current_keyframe = socket.assigns.keyframe
+    keyframes = socket.assigns.projection.keyframes
+
+    index =
+      (Enum.find_index(keyframes, fn k -> k.id == current_keyframe.id end) + 1)
+      |> min(length(keyframes) - 1)
+
+    keyframe = Enum.at(keyframes, index)
+
+    {:noreply,
+     socket
+     |> assign(:keyframe, keyframe)
+     |> assign(:time, keyframe.time + socket.assigns.projection.time)}
+  end
+
+  def handle_event("delete-keyframe", _, socket) do
+    keyframe = socket.assigns.keyframe
+    projection = socket.assigns.projection
+
+    index =
+      Enum.find_index(projection.keyframes, fn k -> k.id == keyframe.id end)
+
+    if length(projection.keyframes) == 1 do
+      {:noreply, put_flash(socket, :error, "Cannot delete the last keyframe")}
+    else
+      case Keyframes.delete_keyframe(keyframe) do
+        {:ok, _} ->
+          projection = Projections.get_projection_with_keyframes!(projection.id)
+
+          projections =
+            socket.assigns.projections
+            |> Enum.map(fn p -> if p.id == projection.id, do: projection, else: p end)
+
+          keyframe = Enum.at(projection.keyframes, min(index, length(projection.keyframes) - 1))
+
+          {:noreply,
+           socket
+           |> assign(:projection, projection)
+           |> assign(:projections, projections)
+           |> assign(:keyframe, keyframe)}
+
+        {:error, _} ->
+          {:noreply, put_flash(socket, :error, "Error deleting keyframe")}
+      end
+    end
   end
 
   defp get_position_string(keyframe) do

@@ -80,7 +80,7 @@ const debouncedDispatchEvent = debounce((value) => {
   );
 }, 300);
 
-Hooks.ProjectionUpdate = {
+Hooks.KeyframeUpdate = {
   // projection_id() {
   //   return this.el.dataset.projectionId;
   // },
@@ -114,6 +114,34 @@ Hooks.ProjectionUpdate = {
       this.pushEvent("vantage:set-fov", {
         id: this.keyframe_id(),
         fov,
+      });
+    });
+  },
+};
+
+Hooks.ProjectionUpdate = {
+  projection_id() {
+    return this.el.dataset.projectionId;
+  },
+  mounted(e) {
+    this.el.addEventListener("vantage:create-keyframe", (e) => {
+      const [position_x, position_y, position_z] = e.detail.position;
+      const [rotation_x, rotation_y, rotation_z] = e.detail.rotation;
+      const fov = e.detail.fov;
+      const far = e.detail.far;
+      const time = e.detail.time;
+
+      this.pushEvent("vantage:create-keyframe", {
+        projection_id: this.projection_id(),
+        position_x,
+        position_y,
+        position_z,
+        rotation_x: rotation_x * (180 / Math.PI),
+        rotation_y: rotation_y * (180 / Math.PI),
+        rotation_z: rotation_z * (180 / Math.PI),
+        fov,
+        far,
+        time,
       });
     });
   },
@@ -176,3 +204,10 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+window.addEventListener("phx:get-focus-projection-interpolation", (e) => {
+  let renderer = document.getElementById("renderer");
+  if (renderer) {
+    renderer.getFocusProjectionInterpolation(e.detail.time);
+  }
+});

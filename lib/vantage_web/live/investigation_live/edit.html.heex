@@ -21,26 +21,28 @@
       first-person={@first_person}
       controls="edit"
       phx-hook="RendererUpdate"
-      time="0"
+      time={@time}
     >
       <vantage-projection
         :for={projection <- @projections}
         src={projection.file}
         projection-type={projection.projection_type}
+        time={projection.time}
         id={projection.id}
         focus={projection.id == @projection_id}
         phx-hook="ProjectionUpdate"
         data-projection-id={projection.id}
-        data-keyframe-id={Enum.at(projection.keyframes, 0).id}
       >
         <vantage-keyframe
           :for={keyframe <- projection.keyframes}
+          id={keyframe.id}
           position={projection.projection_type != :map && get_position_string(keyframe)}
           rotation={projection.projection_type != :map && get_rotation_string(keyframe)}
           screen={projection.projection_type != :map}
           time={keyframe.time}
           far={projection.projection_type != :map && keyframe.far}
           fov={projection.projection_type != :map && keyframe.fov}
+          phx-hook="KeyframeUpdate"
           data-keyframe-id={keyframe.id}
         >
         </vantage-keyframe>
@@ -115,6 +117,7 @@
         module={VantageWeb.InvestigationLive.ProjectionInspector}
         id={@projection.id}
         projection={@projection}
+        keyframe={@keyframe}
       />
     </section>
   </div>
@@ -125,6 +128,7 @@
     investigation={@investigation}
     projections={@projections}
     projection={@projection}
+    keyframe={@keyframe}
   />
 </main>
 <.modal

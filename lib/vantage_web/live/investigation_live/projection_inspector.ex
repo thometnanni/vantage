@@ -21,7 +21,15 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
           <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
         </div> --%>
       </.simple_form>
-      <header>keyframe</header>
+      <div class="flex justify-between pt-2">
+        <header>keyframe</header>
+        <div class="flex gap-2">
+          <button phx-click="prev-keyframe">←</button>
+          <button phx-click="add-keyframe">+</button>
+          <button phx-click="next-keyframe">→</button>
+          <button phx-click="delete-keyframe">-</button>
+        </div>
+      </div>
       <.simple_form
         for={@keyframe_form}
         phx-target={@myself}
@@ -58,13 +66,10 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
   end
 
   @impl true
-  def update(%{projection: projection} = assigns, socket) do
-    keyframe = Enum.at(projection.keyframes, 0)
-
+  def update(%{projection: projection, keyframe: keyframe} = assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:keyframe, keyframe)
      |> assign(
        :projection_form,
        to_form(Projections.change_projection(projection))

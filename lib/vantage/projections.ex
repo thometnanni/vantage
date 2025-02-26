@@ -7,6 +7,7 @@ defmodule Vantage.Projections do
   alias Vantage.Repo
 
   alias Vantage.Projections.Projection
+  alias Vantage.Keyframes.Keyframe
 
   @doc """
   Returns the list of projections belonging to the specified investigation.
@@ -39,7 +40,7 @@ defmodule Vantage.Projections do
       from p in Projection,
         where: p.investigation_id == ^investigation_id
 
-    Repo.all(query) |> Repo.preload(:keyframes)
+    Repo.all(query) |> Repo.preload(keyframes: from(k in Keyframe, order_by: k.time))
   end
 
   @doc """
@@ -109,7 +110,8 @@ defmodule Vantage.Projections do
 
   """
   def get_projection_with_keyframes!(id),
-    do: Repo.get!(Projection, id) |> Repo.preload(:keyframes)
+    do:
+      Repo.get!(Projection, id) |> Repo.preload(keyframes: from(k in Keyframe, order_by: k.time))
 
   @doc """
   Creates a projection.

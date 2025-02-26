@@ -29,15 +29,25 @@ defmodule VantageWeb.InvestigationLive.TimelineComponent do
         <div :for={projection <- @items} class="w-[100%] relative h-1">
           <div class={[
             "absolute bg-white/10 h-1 w-full",
-            projection.id == @projection.id && "bg-brand"
+            projection.id == @projection.id && "!bg-brand/15"
           ]}>
           </div>
           <div
             class={[
-              "absolute bg-white h-1",
-              projection.id == @projection.id && "bg-brand"
+              "absolute bg-white/40 h-1",
+              projection.id == @projection.id && "!bg-brand/40"
             ]}
             style={"left: #{projection.left}; width: max(#{projection.width}, 1px)"}
+          >
+          </div>
+          <div
+            :for={keyframe <- projection.keyframes}
+            class={[
+              "absolute w-1.5 h-1.5 bg-white translate-x-[-50%] translate-y-[-25%] rotate-45",
+              keyframe.id == @keyframe.id && "!bg-brand border-white border scale-150"
+            ]}
+            style={"left: #{keyframe.left}"}
+            phx-click={JS.push("select-keyframe", value: %{id: keyframe.id})}
           >
           </div>
         </div>
@@ -60,13 +70,24 @@ defmodule VantageWeb.InvestigationLive.TimelineComponent do
 
     # projections = Projections.list_projections(assigns.investigation.id)
 
+    # Logger.warning(inspect(assigns.projections))
+
     items =
       assigns.projections
       |> Enum.map(fn projection ->
+        left = get_time(projection.time, min_time, max_time)
+
         %{
           id: projection.id,
-          left: "#{get_time(projection.time, min_time, max_time)}%",
-          width: "#{get_duration(projection.duration, min_time, max_time)}%"
+          left: "#{left}%",
+          width: "#{get_duration(projection.duration, min_time, max_time)}%",
+          keyframes:
+            Enum.map(projection.keyframes, fn keyframe ->
+              %{
+                id: keyframe.id,
+                left: "#{left + get_time(keyframe.time, min_time, max_time)}%"
+              }
+            end)
         }
       end)
 
