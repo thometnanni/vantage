@@ -1,6 +1,7 @@
 services:
   app:
-    image: sinanatra/vantage:latest
+    build: .
+    # image: sinanatra/vantage:latest
     ports:
       - "4000:4000"
     environment:
