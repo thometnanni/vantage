@@ -1,4 +1,8 @@
-.git
-node_modules
 assets/node_modules
-/_build
+_build
+deps
+.git
+*.md
+.gitignore
+Dockerfile
+docker-compose.yml

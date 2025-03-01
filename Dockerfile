@@ -12,16 +12,12 @@ RUN mix local.hex --force && mix local.rebar --force
 COPY mix.exs mix.lock ./
 COPY config config
 
-RUN mix deps.get --only prod
-RUN mix deps.compile
-
 COPY assets assets
 RUN npm install --prefix assets
 
 COPY . .
 
-RUN mix deps.get && mix compile && mix phx.digest && mix release
-
+RUN  mix deps.get && mix assets.deploy && mix compile && mix release
 
 FROM alpine:3.17 AS app
 
