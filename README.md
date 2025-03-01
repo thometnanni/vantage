@@ -20,7 +20,8 @@ Vantage is open source, licensed under the MIT License.
 1. Clone the repository:
 
 ```code
-git clone https://github.com/thometnanni/vantage.git cd vantage
+git clone https://github.com/thometnanni/vantage.git
+cd vantage
 ```
 
 2. Build and start the container:
