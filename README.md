@@ -1,3 +1,5 @@
+<img width="1492" alt="Screenshot 2025-03-01 at 18 51 32" src="https://github.com/user-attachments/assets/8eef75a0-25ea-4dab-816d-646bfd30d184" />
+
 ## About
 
 **Vantage** is an open-source tool designed for **fact-checkers, investigative journalists, and Open Source Intelligence (OSINT) practitioners**. It enables users to **reconstruct spatial contexts of images and videos** by projecting them onto **3D environments**.
