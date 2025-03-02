@@ -95,7 +95,16 @@ Alternatevely, you can import any glTF file.
 To reconstruct a scene:
 
 1. Generate a 3D scene using the Vantage Scene Setup tool.
-2. Import the model into Vantage.
+2. Import the model and map into Vantage.
 3. Align images and videos by matching their perspectives with real-world camera positions.
-4. Use the timeline to organize and analyze events as they unfold.
-
+   - Use the first-person view to position media:
+     - **W**: Move forward
+     - **A**: Move left
+     - **S**: Move backward
+     - **D**: Move right
+     - **F**: Move down
+     - **R**: Move up
+     - **Q**: Rotate camera counterclockwise (around Z-axis)
+     - **E**: Rotate camera clockwise (around Z-axis)
+4. Use the mouse wheel to adjust the camera's field of view (FOV) for zooming in or out.
+5. Use the timeline to organize and analyze events as they unfold.
