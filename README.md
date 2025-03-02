@@ -24,7 +24,9 @@ git clone https://github.com/thometnanni/vantage.git
 cd vantage
 ```
 
-2. Build and start the container:
+2. Rename the `.env.example` file to `.env`
+
+3. Build and start the container:
 
 ```code
 docker compose up
