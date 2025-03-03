@@ -1,8 +1,21 @@
+<p align="center">
+  <img align="center" src="https://github.com/user-attachments/assets/e15fa811-4d75-4658-9a2c-7618c05b9abf" height="150" alt="Vantage">
+  <br>
+    <p align="center">
+    An open-source tool designed for fact-checkers, investigative journalists, and Open Source Intelligence (OSINT) practitioners. It enables users to reconstruct spatial contexts of images and videos by projecting them onto 3D environments.
+    <br>
+  </p>
+  <p align="center"><a href="https://vantage.thometnanni.net/">Platform Overview</a> &bull; <a href="https://github.com/thometnanni/vantage/?tab=readme-ov-file#installation-docker">Installation</a></p>
+</p>
+
+---
+
+<br>
+<br>
+
+
+
 <img width="1492" alt="Screenshot 2025-03-01 at 18 51 32" src="https://github.com/user-attachments/assets/8eef75a0-25ea-4dab-816d-646bfd30d184" />
-
-## About
-
-**Vantage** is an open-source tool designed for **fact-checkers, investigative journalists, and Open Source Intelligence (OSINT) practitioners**. It enables users to **reconstruct spatial contexts of images and videos** by projecting them onto **3D environments**.
 
 ## License
 
