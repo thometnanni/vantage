@@ -40,6 +40,7 @@
           rotation={projection.projection_type != :map && get_rotation_string(keyframe)}
           screen={projection.projection_type != :map}
           time={keyframe.time}
+          opacity={keyframe.opacity}
           far={projection.projection_type != :map && keyframe.far}
           fov={projection.projection_type != :map && keyframe.fov}
           phx-hook="KeyframeUpdate"

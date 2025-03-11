@@ -52,9 +52,20 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
         </div>
 
         <div class="flex gap-2">
-          <.input field={@keyframe_form[:fov]} type="number" label="fov" step="any" />
-          <.input field={@keyframe_form[:far]} type="number" label="far" step="any" />
+          <.input field={@keyframe_form[:fov]} type="number" label="fov" step="any" class="flex-1" />
+          <.input field={@keyframe_form[:far]} type="number" label="far" step="any" class="flex-1" />
+          <.input
+            field={@keyframe_form[:opacity]}
+            type="number"
+            label="opacity"
+            step="0.01"
+            max="1"
+            min="0"
+            class="flex-1"
+          />
         </div>
+
+        <div class="flex gap-2"></div>
 
         <%!-- <div class="flex gap-2">
           <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />

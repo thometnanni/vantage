@@ -373,7 +373,7 @@ defmodule VantageWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div>
+    <div class="flex-1">
       <.label for={@id}>{@label}</.label>
       <input
         type={@type}
