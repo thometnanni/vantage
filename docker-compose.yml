@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    build: .   
     # image: sinanatra/vantage:latest
     ports:
       - "4000:4000"
@@ -12,7 +12,8 @@ services:
     depends_on:
       - db
     command: sh -c "bin/vantage eval \"Vantage.Release.migrate()\" && bin/vantage start"
-
+    volumes:
+      - uploads-data:/app/lib/vantage-0.1.0/priv/static/uploads
 
   db:
     image: postgres:14
@@ -24,4 +25,5 @@ services:
       - db-data:/var/lib/postgresql/data
 
 volumes:
+  uploads-data:
   db-data:
