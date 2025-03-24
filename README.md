@@ -38,8 +38,11 @@ cd vantage
 ```
 
 2. Rename the `.env.example` file to `.env`
+```code
+mv .env.example .env
+```
 
-3. Build and start the container:
+4. Build and start the container:
 
 ```code
 docker compose up
