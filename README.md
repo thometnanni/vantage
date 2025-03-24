@@ -42,13 +42,13 @@ cd vantage
 mv .env.example .env
 ```
 
-4. Build and start the container:
+3. Build and start the container:
 
 ```code
 docker compose up
 ```
 
-3. Access the platform at: [http://localhost:4000](http://localhost:4000) .
+4. Access the platform at: [http://localhost:4000](http://localhost:4000) .
 
 ## Installation (Mix)
 
