@@ -110,7 +110,7 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
           />
         </div>
 
-        <div class="flex gap-2"></div>
+        <div class="flex gap-2 mb-2"></div>
 
         <%!-- <div class="flex gap-2">
           <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />
