@@ -381,7 +381,7 @@ defmodule VantageWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "block w-full rounded-md text-zinc-900 focus:ring-0 sm:text-sm sm:leading-1",
+          "block w-full rounded-md text-zinc-900 focus:ring-0 sm:text-xs sm:leading-1",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
