@@ -206,7 +206,7 @@ defmodule VantageWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="flex flex-col gap-4 bg-white">
+      <div class="flex flex-col gap-1 bg-white">
         {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="flex items-center justify-between gap-6">
           {render_slot(action, f)}
@@ -381,7 +381,7 @@ defmodule VantageWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+          "block w-full rounded-md text-zinc-900 focus:ring-0 sm:text-sm sm:leading-1",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}

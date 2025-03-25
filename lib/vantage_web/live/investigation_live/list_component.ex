@@ -37,11 +37,11 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
           <div role="button" class="bg-black text-white py-1 px-2 rounded-full">Add Map</div>
         </.link> --%>
       </div>
-      <section class="flex flex-col gap-2">
+      <section class="flex flex-col gap-1">
         <div
           :for={item <- @items}
           class={[
-            "h-12 flex items-center justify-between",
+            "h-10 flex items-center justify-between",
             @item_id == item.id && "!bg-brand"
           ]}
           id={"item-#{item.id}"}
@@ -59,9 +59,9 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
             <div class="flex items-center gap-2">
               <div :if={@type == :projections}>
                 <%= if item.file =~ ~r/\.(mp4|webm|ogg)$/ do %>
-                  <video src={item.file} class="h-12 w-12 object-cover overflow-hidden" muted />
+                  <video src={item.file} class="h-10 w-10 object-cover overflow-hidden" muted />
                 <% else %>
-                  <img src={item.file} class="h-12 w-12 object-cover overflow-hidden" />
+                  <img src={item.file} class="h-10 w-10 object-cover overflow-hidden" />
                 <% end %>
               </div>
               <div class="whitespace-nowrap overflow-hidden flex-1 text-ellipsis">{item.name}</div>
@@ -75,7 +75,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
               end
             }
             replace
-            class="p-2 w-8 flex justify center"
+            class="p-2 w-10 flex justify center"
           >
             •••
           </.link>

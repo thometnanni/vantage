@@ -13,23 +13,68 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
         phx-change="save"
         phx-submit="save"
         id="projection-form"
+
       >
-        <.input field={@projection_form[:time]} type="number" label="Time" step="any" />
+
+        <header class="text-lg">Time</header>
+        <.input field={@projection_form[:time]} type="number" label="" step="any" />
+
 
         <%!-- <div class="flex gap-2">
           <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />
           <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
         </div> --%>
       </.simple_form>
-      <div class="flex justify-between pt-2">
-        <header>keyframe</header>
-        <div class="flex gap-2">
-          <button phx-click="prev-keyframe">←</button>
-          <button phx-click="add-keyframe">+</button>
-          <button phx-click="next-keyframe">→</button>
-          <button phx-click="delete-keyframe">-</button>
-        </div>
+      <div class="flex items-center justify-between mt-2 mb-4 pt-2">
+      <header class="text-lg leading-none flex items-center h-8">
+        Keyframe
+      </header>
+
+      <div class="flex space-x-2">
+        <button
+          phx-click="prev-keyframe"
+          class="flex items-center justify-center rounded-md hover:bg-gray-200 transition"
+          aria-label="Previous Keyframe"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          phx-click="add-keyframe"
+          class="flex items-center justify-center rounded-md hover:bg-gray-200 transition"
+          aria-label="Add Keyframe"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+
+        <button
+          phx-click="next-keyframe"
+          class="flex items-center justify-center rounded-md hover:bg-gray-200 transition"
+          aria-label="Next Keyframe"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        <button
+          phx-click="delete-keyframe"
+          class="flex items-center justify-center rounded-md hover:bg-gray-200 transition"
+          aria-label="Delete Keyframe"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+          </svg>
+        </button>
       </div>
+    </div>
+
+
+
       <.simple_form
         for={@keyframe_form}
         phx-target={@myself}
