@@ -27,6 +27,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
      |> assign(:investigation, investigation)
      |> assign(:models, models)
      |> assign(:first_person, false)
+     |> assign(:use_coordinates, false)
      |> assign(:time, 0.0)
      |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
   end
@@ -332,6 +333,12 @@ defmodule VantageWeb.InvestigationLive.Edit do
     # Logger.warning("Setting time to #{time}")
     {:noreply, socket |> assign(:time, time)}
     # {:noreply, socket}
+  end
+
+  def handle_event("toggle-use-coordinates", _, socket) do
+    {:noreply,
+     socket
+     |> assign(:use_coordinates, !socket.assigns.use_coordinates)}
   end
 
   def handle_event("add-keyframe", _, socket) do

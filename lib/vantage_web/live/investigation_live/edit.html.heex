@@ -119,6 +119,10 @@
         id={@projection.id}
         projection={@projection}
         keyframe={@keyframe}
+        use_coordinates={@use_coordinates && @investigation.latitude && @investigation.longitude}
+        has_reference_coordinates={@investigation.latitude && @investigation.longitude}
+        reference_latitude={@investigation.latitude}
+        reference_longitude={@investigation.longitude}
       />
     </section>
   </div>
