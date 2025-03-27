@@ -170,6 +170,7 @@ defmodule VantageWeb.InvestigationLive.Edit do
     {:noreply,
      socket
      |> assign(:projection, projection)
+     |> assign(:keyframe, keyframe)
      |> assign(:projections, updated_projections)}
   end
 

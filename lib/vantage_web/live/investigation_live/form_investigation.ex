@@ -52,7 +52,7 @@ defmodule VantageWeb.InvestigationLive.FormInvestigation do
     case Investigations.update_investigation(socket.assigns.investigation, investigation_params) do
       {:ok, investigation} ->
         notify_parent({:saved, investigation})
-        changeset = Investigations.change_investigation(%Investigation{})
+        changeset = Investigations.change_investigation(investigation)
 
         {
           :noreply,
