@@ -86,13 +86,13 @@ defmodule VantageWeb.GeoUtils do
         [lon, lat]
       ) * :math.pi() / 180
 
-    x = distance * :math.cos(bearing) * -1
-    y = distance * :math.sin(bearing)
+    x = distance * :math.sin(bearing) * -1
+    y = distance * :math.cos(bearing)
 
     {x, y}
   end
 
-  def meters_to_coords([x, y], [lon, lat]) do
+  def meters_to_coords([y, x], [lon, lat]) do
     # Convert x,y to distance and bearing
     distance = :math.sqrt(x * x + y * y)
     bearing = :math.atan2(y, -x) * 180 / :math.pi()
