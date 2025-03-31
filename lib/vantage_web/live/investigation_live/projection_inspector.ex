@@ -209,7 +209,7 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
     keyframe =
       if assigns.use_coordinates do
         {lon, lat} =
-          GeoUtils.meters_to_coords_alt_2([keyframe.position_x, keyframe.position_z], [
+          GeoUtils.meters_to_coords([keyframe.position_x, keyframe.position_z], [
             assigns.reference_longitude,
             assigns.reference_latitude
           ])
