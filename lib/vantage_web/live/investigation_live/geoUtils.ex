@@ -105,17 +105,10 @@ defmodule VantageWeb.GeoUtils do
     # Calculate angular distance
     delta = distance / @r
 
-    # Calculate the meridional parts for lat1
-    mp1 = :math.log(:math.tan(lat1 / 2 + :math.pi() / 4))
-
     # Calculate destination latitude using rhumb line formula
     lat2 = lat1 + delta * :math.cos(theta)
 
-    # Calculate the meridional parts for lat2
-    mp2 = :math.log(:math.tan(lat2 / 2 + :math.pi() / 4))
-
     # Calculate the change in longitude
-    delta_psi = mp2 - mp1
     delta_lon = delta * :math.sin(theta) / :math.cos(lat1)
 
     # Calculate final longitude
