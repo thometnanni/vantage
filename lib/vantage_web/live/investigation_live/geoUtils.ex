@@ -126,6 +126,13 @@ defmodule VantageWeb.GeoUtils do
         true -> lon2_deg
       end
 
+    lat2_deg =
+      cond do
+        lat2_deg > 180 -> lat2_deg - 360
+        lat2_deg < -180 -> lat2_deg + 360
+        true -> lat2_deg
+      end
+
     {lon2_deg, lat2_deg}
   end
 end
