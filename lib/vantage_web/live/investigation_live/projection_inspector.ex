@@ -2,7 +2,7 @@ defmodule VantageWeb.InvestigationLive.ProjectionInspector do
   alias VantageWeb.GeoUtils
   use VantageWeb, :live_component
   require Logger
-  alias Vantage.{Projections, Projections.Projection, Keyframes, Keyframes.Keyframe}
+  alias Vantage.{Projections, Projections.Projection, Keyframes}
 
   @impl true
   def render(assigns) do

@@ -6,7 +6,8 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
   def render(assigns) do
     ~H"""
     <div
-      class="flex flex-col gap-2"
+      id="list"
+      class="flex flex-1 flex-col gap-2"
       phx-click={
         JS.patch(
           case @type do
@@ -37,14 +38,18 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
           <div role="button" class="bg-black text-white py-1 px-2 rounded-full">Add Map</div>
         </.link> --%>
       </div>
-      <section class="flex flex-col gap-1">
+      <section class="flex flex-col gap-1 relative">
         <div
           :for={item <- @items}
           class={[
-            "h-10 flex items-center justify-between",
+            "h-10 flex items-center justify-between item",
             @item_id == item.id && "!bg-brand"
           ]}
           id={"item-#{item.id}"}
+          draggable="true"
+          phx-hook="DragItem"
+          data-item-id={item.id}
+          data-item-type={@type}
         >
           <.link
             patch={
@@ -55,16 +60,28 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
             }
             replace
             class="flex-1 overflow-hidden"
+            draggable="false"
           >
             <div class="flex items-center gap-2">
               <div :if={@type == :projections}>
                 <%= if item.file =~ ~r/\.(mp4|webm|ogg)$/ do %>
-                  <video src={item.file} class="h-10 w-10 object-cover overflow-hidden" muted />
+                  <video
+                    src={item.file}
+                    class="h-10 w-10 object-cover overflow-hidden"
+                    muted
+                    draggable="false"
+                  />
                 <% else %>
-                  <img src={item.file} class="h-10 w-10 object-cover overflow-hidden" />
+                  <img
+                    src={item.file}
+                    class="h-10 w-10 object-cover overflow-hidden"
+                    draggable="false"
+                  />
                 <% end %>
               </div>
-              <div class="whitespace-nowrap overflow-hidden flex-1 text-ellipsis">{item.name}</div>
+              <div class="whitespace-nowrap overflow-hidden flex-1 text-ellipsis">
+                {item.name}
+              </div>
             </div>
           </.link>
           <.link
@@ -93,7 +110,7 @@ defmodule VantageWeb.InvestigationLive.ListComponent do
   end
 
   @impl true
-  def handle_event("edit-item", %{"id" => id}, socket) do
+  def handle_event("edit-item", %{"id" => _id}, socket) do
     {:noreply,
      socket
      |> put_flash(:info, "inspect(unsigned_params)")}

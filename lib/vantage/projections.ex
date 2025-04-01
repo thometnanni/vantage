@@ -21,7 +21,8 @@ defmodule Vantage.Projections do
   def list_projections(investigation_id) do
     query =
       from p in Projection,
-        where: p.investigation_id == ^investigation_id
+        where: p.investigation_id == ^investigation_id,
+        order_by: p.list_position
 
     Repo.all(query)
   end
@@ -38,7 +39,8 @@ defmodule Vantage.Projections do
   def list_projections_with_keyframes(investigation_id) do
     query =
       from p in Projection,
-        where: p.investigation_id == ^investigation_id
+        where: p.investigation_id == ^investigation_id,
+        order_by: p.list_position
 
     Repo.all(query) |> Repo.preload(keyframes: from(k in Keyframe, order_by: k.time))
   end
@@ -176,5 +178,42 @@ defmodule Vantage.Projections do
   """
   def change_projection(%Projection{} = projection, attrs \\ %{}) do
     Projection.changeset(projection, attrs)
+  end
+
+  @doc """
+  sets the list position of a projection and updates the list positions of all other projections in the same investigation.
+  """
+  def set_projection_list_position(%Projection{} = projection, new_position) do
+    # Get the current list position of the projection
+    current_position = projection.list_position
+
+    # Update the list positions of all other projections in the same investigation
+    from(p in Projection,
+      where: p.investigation_id == ^projection.investigation_id,
+      update: [
+        set: [
+          list_position:
+            fragment(
+              """
+              CASE
+                WHEN list_position = ? THEN ?
+                WHEN list_position >= ? AND list_position < ? THEN list_position + 1
+                WHEN list_position > ? AND list_position <= ? THEN list_position - 1
+                ELSE list_position
+              END
+              """,
+              ^current_position,
+              ^new_position,
+              ^new_position,
+              ^current_position,
+              ^current_position,
+              ^new_position
+            )
+        ]
+      ]
+    )
+    |> Repo.update_all([])
+
+    {:ok, projection}
   end
 end

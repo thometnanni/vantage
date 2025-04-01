@@ -9,6 +9,7 @@ defmodule Vantage.Projections.Projection do
     field :time, :float, default: 0.0
     field :duration, :float, default: 0.0
     field :file, :string
+    field :list_position, :integer, default: 0
 
     field :projection_type, Ecto.Enum,
       values: [:perspective, :orthographic, :map],
@@ -23,7 +24,23 @@ defmodule Vantage.Projections.Projection do
   @doc false
   def changeset(projection, attrs) do
     projection
-    |> cast(attrs, [:name, :file, :projection_type, :time, :investigation_id, :duration])
-    |> validate_required([:name, :file, :projection_type, :time, :investigation_id, :duration])
+    |> cast(attrs, [
+      :name,
+      :file,
+      :projection_type,
+      :time,
+      :investigation_id,
+      :duration,
+      :list_position
+    ])
+    |> validate_required([
+      :name,
+      :file,
+      :projection_type,
+      :time,
+      :investigation_id,
+      :duration,
+      :list_position
+    ])
   end
 end

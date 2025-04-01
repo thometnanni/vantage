@@ -336,6 +336,36 @@ defmodule VantageWeb.InvestigationLive.Edit do
     # {:noreply, socket}
   end
 
+  def handle_event(
+        "set-list-position",
+        %{"id" => id, "type" => "projections", "position" => position},
+        socket
+      ) do
+    projection = Projections.get_projection!(id)
+
+    case Projections.set_projection_list_position(projection, position) do
+      {:ok, projection} ->
+        projections = Projections.list_projections_with_keyframes(socket.assigns.investigation.id)
+
+        {:noreply,
+         socket
+         |> assign(:projection, projection)
+         |> assign(:projections, projections)}
+
+      {:error, %Ecto.Changeset{} = _} ->
+        {:noreply, put_flash(socket, :error, "Error updating projection")}
+    end
+  end
+
+  def handle_event(
+        "set-list-position",
+        %{"id" => _id, "type" => "models", "position" => _position},
+        socket
+      ) do
+    Logger.warning("model reordering not yet implemented")
+    {:noreply, socket}
+  end
+
   def handle_event("toggle-use-coordinates", _, socket) do
     {:noreply,
      socket

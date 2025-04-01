@@ -308,6 +308,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
 
     projection_params = Map.put(projection_params, "investigation_id", investigation_id)
     projection_params = Map.put(projection_params, "time", socket.assigns.time || 0.0)
+    projection_params = Map.put(projection_params, "list_position", socket.assigns.position || 0)
 
     {:noreply, socket}
 

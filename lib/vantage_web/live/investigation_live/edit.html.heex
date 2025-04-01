@@ -86,7 +86,7 @@
         Investigation
       </.link>
     </nav>
-    <section class="p-2 flex-1 overflow-auto">
+    <section class="p-2 flex-1 overflow-auto flex flex-col">
       <.live_component
         :if={@panel_action == :investigation}
         module={VantageWeb.InvestigationLive.FormInvestigation}
@@ -165,6 +165,12 @@
       case @type do
         :model -> @model
         :projection -> @projection
+      end
+    }
+    position={
+      case @type do
+        :model -> length(@models)
+        :projection -> length(@projections)
       end
     }
     patch={

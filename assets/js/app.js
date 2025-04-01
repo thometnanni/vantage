@@ -185,6 +185,54 @@ Hooks.TimelineScrubber = {
   },
 };
 
+Hooks.DragItem = {
+  item_id() {
+    return this.el.dataset.itemId;
+  },
+  item_type() {
+    return this.el.dataset.itemType;
+  },
+  mounted() {
+    this.el.addEventListener("dragstart", (e) => {
+      e.dataTransfer.effectAllowed = "move";
+      const controller = new AbortController();
+      const initialOpacity = this.el.style.getPropertyValue("opacity");
+      requestAnimationFrame(() => this.el.style.setProperty("opacity", "0"));
+      this.el.addEventListener(
+        "dragend",
+        (e) => {
+          controller.abort();
+          const items = [...this.el.parentElement.querySelectorAll(".item")];
+          const position = items.findIndex((item) => item === this.el);
+          this.pushEvent("set-list-position", {
+            position,
+            id: this.item_id(),
+            type: this.item_type(),
+          });
+          this.el.style.setProperty("opacity", initialOpacity);
+        },
+        { once: true }
+      );
+      [...this.el.parentElement.querySelectorAll(".item")].forEach((el, i) => {
+        el.addEventListener(
+          "dragover",
+          (e) => {
+            const dragOffset =
+              e.offsetY / el.getBoundingClientRect().height > 0.5;
+
+            if (dragOffset) {
+              el.before(this.el);
+            } else {
+              el.after(this.el);
+            }
+          },
+          { signal: controller.signal }
+        );
+      });
+    });
+  },
+};
+
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
