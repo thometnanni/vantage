@@ -44,6 +44,7 @@ function debounce(func, wait) {
 
 const soreData = {
   time: 0,
+  time_volatile: 0,
 };
 
 const store = new Proxy(soreData, {
@@ -53,7 +54,7 @@ const store = new Proxy(soreData, {
   },
   set: function (target, prop, value) {
     // console.log({ type: "set", target, prop, value });
-    if (prop === "time") {
+    if (prop === "time" || prop === "time_volatile") {
       const renderer = document.getElementById("renderer");
       if (renderer) {
         renderer.setAttribute("time", value);
@@ -69,19 +70,26 @@ const store = new Proxy(soreData, {
         cursor.style.left = `${perc_time * 100}%`;
       }
 
-      debouncedDispatchEvent(value);
+      // if (prop === "time") debouncedDispatchEvent(value);
+
+      if (prop === "time")
+        document.dispatchEvent(
+          new CustomEvent("set-time", {
+            detail: value,
+          })
+        );
     }
     return Reflect.set(target, prop, value);
   },
 });
 
-const debouncedDispatchEvent = debounce((value) => {
-  document.dispatchEvent(
-    new CustomEvent("set-time", {
-      detail: value,
-    })
-  );
-}, 300);
+// const debouncedDispatchEvent = debounce((value) => {
+//   document.dispatchEvent(
+//     new CustomEvent("set-time", {
+//       detail: value,
+//     })
+//   );
+// }, 300);
 
 Hooks.KeyframeUpdate = {
   // projection_id() {
@@ -177,9 +185,25 @@ Hooks.TimelineScrubber = {
     this.el.addEventListener("mousemove", (e) => {
       const rect = this.el.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
+      store.time_volatile =
+        (offsetX / rect.width) * (this.max_time() - this.min_time()) +
+        this.min_time();
+    });
+
+    this.el.addEventListener("click", (e) => {
+      const rect = this.el.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
       store.time =
         (offsetX / rect.width) * (this.max_time() - this.min_time()) +
         this.min_time();
+    });
+
+    this.el.addEventListener("mouseout", (e) => {
+      // const rect = this.el.getBoundingClientRect();
+      // const offsetX = e.clientX - rect.left;
+      store.time_volatile = store.time;
+      // (offsetX / rect.width) * (this.max_time() - this.min_time()) +
+      // this.min_time();
     });
 
     document.addEventListener("set-time", (e) =>

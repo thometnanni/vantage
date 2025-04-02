@@ -22,7 +22,7 @@ defmodule VantageWeb.InvestigationLive.TimelineComponent do
       >
         <div
           id="timeline-cursor"
-          class="absolute h-full w-[1px] bg-brand"
+          class="absolute h-full w-[1px] bg-brand pointer-events-none"
           style={"left: #{@cursor_position}%"}
         >
         </div>
