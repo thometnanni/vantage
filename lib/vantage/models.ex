@@ -7,6 +7,7 @@ defmodule Vantage.Models do
   alias Vantage.Repo
 
   alias Vantage.Models.Model
+  alias Vantage.Investigations
 
   @doc """
   Returns the list of models.
@@ -54,9 +55,16 @@ defmodule Vantage.Models do
 
   """
   def create_model(attrs \\ %{}) do
-    %Model{}
-    |> Model.changeset(attrs)
-    |> Repo.insert()
+    case %Model{}
+         |> Model.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, model} ->
+        Investigations.touch_investigation_by_id(model.investigation_id)
+        {:ok, model}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -72,9 +80,16 @@ defmodule Vantage.Models do
 
   """
   def update_model(%Model{} = model, attrs) do
-    model
-    |> Model.changeset(attrs)
-    |> Repo.update()
+    case model
+         |> Model.changeset(attrs)
+         |> Repo.update() do
+      {:ok, model} ->
+        Investigations.touch_investigation_by_id(model.investigation_id)
+        {:ok, model}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -90,7 +105,14 @@ defmodule Vantage.Models do
 
   """
   def delete_model(%Model{} = model) do
-    Repo.delete(model)
+    case Repo.delete(model) do
+      {:ok, model} ->
+        Investigations.touch_investigation_by_id(model.investigation_id)
+        {:ok, model}
+
+      error ->
+        error
+    end
   end
 
   @doc """

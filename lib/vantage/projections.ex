@@ -8,6 +8,7 @@ defmodule Vantage.Projections do
 
   alias Vantage.Projections.Projection
   alias Vantage.Keyframes.Keyframe
+  alias Vantage.Investigations
 
   @doc """
   Returns the list of projections belonging to the specified investigation.
@@ -128,9 +129,16 @@ defmodule Vantage.Projections do
 
   """
   def create_projection(attrs \\ %{}) do
-    %Projection{}
-    |> Projection.changeset(attrs)
-    |> Repo.insert()
+    case %Projection{}
+         |> Projection.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, projection} ->
+        Investigations.touch_investigation_by_id(projection.investigation_id)
+        {:ok, projection}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -146,9 +154,16 @@ defmodule Vantage.Projections do
 
   """
   def update_projection(%Projection{} = projection, attrs) do
-    projection
-    |> Projection.changeset(attrs)
-    |> Repo.update()
+    case projection
+         |> Projection.changeset(attrs)
+         |> Repo.update() do
+      {:ok, projection} ->
+        Investigations.touch_investigation_by_id(projection.investigation_id)
+        {:ok, projection}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -164,7 +179,14 @@ defmodule Vantage.Projections do
 
   """
   def delete_projection(%Projection{} = projection) do
-    Repo.delete(projection)
+    case Repo.delete(projection) do
+      {:ok, projection} ->
+        Investigations.touch_investigation_by_id(projection.investigation_id)
+        {:ok, projection}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -213,6 +235,8 @@ defmodule Vantage.Projections do
       ]
     )
     |> Repo.update_all([])
+
+    Investigations.touch_investigation_by_id(projection.investigation_id)
 
     {:ok, projection}
   end

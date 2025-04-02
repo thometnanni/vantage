@@ -1,4 +1,4 @@
-<header class="flex justify-end">
+<header class="flex justify-end" id="investigation-header" phx-hook="GetTimezone">
   <.button phx-click="new_investigation">
     New Investigation
   </.button>
@@ -15,9 +15,11 @@
     {format_coordinates(investigation.latitude, investigation.longitude)}
   </:col> --%>
   <%!-- <:col :let={{_id, investigation}} label="Time">{format_date(investigation.time)}</:col> --%>
-  <:col :let={{_id, investigation}} label="Updated">{format_date(investigation.updated_at)}</:col>
+  <:col :let={{_id, investigation}} label="Updated">
+    {format_date(investigation.updated_at, @timezone)}
+  </:col>
   <:col :let={{_id, investigation}} label="Created">
-    {format_date(investigation.inserted_at)}
+    {format_date(investigation.inserted_at, @timezone)}
   </:col>
 
   <:action :let={{_id, investigation}}>

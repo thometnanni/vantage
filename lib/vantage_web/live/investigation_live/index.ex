@@ -6,7 +6,10 @@ defmodule VantageWeb.InvestigationLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :investigations, Investigations.list_investigations())}
+    {:ok,
+     socket
+     |> stream(:investigations, Investigations.list_investigations())
+     |> assign(:timezone, "UTC")}
   end
 
   @impl true
@@ -63,9 +66,20 @@ defmodule VantageWeb.InvestigationLive.Index do
     {:noreply, stream_delete(socket, :investigations, investigation)}
   end
 
-  defp format_date(date) do
+  @impl true
+  def handle_event("set_timezone", %{"timezone" => timezone}, socket) do
+    {:noreply,
+     socket
+     |> assign(:timezone, timezone)
+     |> stream(:investigations, Investigations.list_investigations(), reset: true)}
+  end
+
+  defp format_date(date, timezone) do
     if date do
-      Timex.format!(date, "{Mshort} {D}, {YYYY} {h24}:{m}")
+      date
+      |> Timex.to_datetime()
+      |> Timex.Timezone.convert(timezone)
+      |> Timex.format!("{Mshort} {D}, {YYYY} {h24}:{m}")
     else
       nil
     end

@@ -19,9 +19,14 @@ defmodule Vantage.Investigations do
 
   """
   def list_investigations do
-    Repo.all(Investigation)
+    query =
+      from i in Investigation,
+        order_by: [desc: i.updated_at]
+
+    Repo.all(query)
   end
 
+  @spec get_investigation!(any()) :: any()
   @doc """
   Gets a single investigation.
 
@@ -214,5 +219,12 @@ defmodule Vantage.Investigations do
         attrs \\ %{}
       ) do
     InvestigationCollaborator.changeset(investigation_collaborator, attrs)
+  end
+
+  def touch_investigation_by_id(id) do
+    get_investigation!(id)
+    |> Investigation.changeset(%{})
+    # |> Map.put(:force, true)
+    |> Repo.update(force: true)
   end
 end
