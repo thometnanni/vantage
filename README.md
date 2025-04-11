@@ -13,9 +13,8 @@
 <br>
 <br>
 
-
-
-<img width="1492" alt="Screenshot 2025-03-01 at 18 51 32" src="https://github.com/user-attachments/assets/8eef75a0-25ea-4dab-816d-646bfd30d184" />
+<img width="49%" alt="Screenshot 2025-04-11 at 10 12 53" src="https://github.com/user-attachments/assets/7bb91296-b8eb-4df9-8316-930e99a37a2c" />
+<img width="49%" alt="Screenshot 2025-04-11 at 10 13 47" src="https://github.com/user-attachments/assets/2fe26a90-1a47-49c5-8c63-3b3ff7e89f8b" />
 
 ## License
 
