@@ -35,7 +35,9 @@ export default {
         width,
         height,
         focusProjection?.camera
-      );
+      ).then(() => {
+        focusProjection.focus = true;
+      });
     });
   },
 };
@@ -66,9 +68,9 @@ async function exportImageSequence(
   let percentage = "0";
 
   for (let i = 0; i < totalFrames; i++) {
-    if ((i / totalFrames).toFixed(2) != percentage) {
+    if (((i / totalFrames) * 100).toFixed(0) != percentage) {
       percentage = ((i / totalFrames) * 100).toFixed(0);
-      console.log(`${+percentage}%`);
+      console.log(`${percentage}%`);
     }
 
     const t = i / fps;
