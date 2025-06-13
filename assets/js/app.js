@@ -22,6 +22,7 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import GetTimezone from "./hooks/GetTimezone";
+import RecordScene from "./hooks/RecordScene";
 
 import "vantage-renderer";
 
@@ -31,6 +32,7 @@ let csrfToken = document
 
 let Hooks = {
   GetTimezone,
+  RecordScene,
 };
 
 function debounce(func, wait) {

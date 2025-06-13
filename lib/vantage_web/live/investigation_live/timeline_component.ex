@@ -11,6 +11,7 @@ defmodule VantageWeb.InvestigationLive.TimelineComponent do
       <div class="time flex justify-between text-white">
         <div>{@min_time}</div>
         <button>play/pause</button>
+        <button id="record-button" phx-hook="RecordScene" data-max-time={@max_time}>record</button>
         <div>{@max_time}</div>
       </div>
       <div
