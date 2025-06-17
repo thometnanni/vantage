@@ -63,7 +63,10 @@ async function exportImageSequence(
 
   const totalFrames = durationSeconds * fps;
   vantageRenderer.renderer.setAnimationLoop(null);
-  const files = {};
+
+  const batchSize = 250;
+  let files = {};
+  let batchIndex = 0;
 
   let percentage = "0";
 
@@ -86,28 +89,30 @@ async function exportImageSequence(
       vantageRenderer.scene,
       camera ?? vantageRenderer.cameraOperator.camera
     );
-    // Wait for rendering to finish if needed
 
-    // Get PNG data URL and convert to Uint8Array
     const dataUrl = vantageRenderer.renderer.domElement.toDataURL("image/png");
     const base64 = dataUrl.split(",")[1];
     const binary = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     files[`frame_${`${i}`.padStart(4, "0")}.png`] = binary;
-  }
 
-  // Zip the files
-  const zipped = zipSync(files);
-  const blob = new Blob([zipped], { type: "application/zip" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "sequence.zip";
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 100);
+    // When batch is full or last frame, zip and download
+    if ((i + 1) % batchSize === 0 || i === totalFrames - 1) {
+      const zipped = zipSync(files);
+      const blob = new Blob([zipped], { type: "application/zip" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `sequence_batch_${batchIndex + 1}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 100);
+      files = {};
+      batchIndex++;
+    }
+  }
 
   vantageRenderer.renderer.setAnimationLoop(vantageRenderer.update);
 
