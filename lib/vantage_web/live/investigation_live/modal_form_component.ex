@@ -150,7 +150,7 @@ defmodule VantageWeb.InvestigationLive.ModalFormComponent do
               ~w(.gltf .glb)
           end,
         max_entries: 1,
-        max_file_size: 500_000_000
+        max_file_size: 1_000_000_000
       )
     }
   end
