@@ -94,6 +94,13 @@
         investigation={@investigation}
       />
       <.live_component
+        :if={@panel_action == :investigation && @user_role == :owner}
+        module={VantageWeb.InvestigationLive.FormInvestigationCollaborators}
+        id={"#{@investigation.id}-user-roles"}
+        investigation={@investigation}
+        current_user={@current_user}
+      />
+      <.live_component
         :if={@panel_action == :models || @panel_action == :projections}
         module={VantageWeb.InvestigationLive.ListComponent}
         item_id={

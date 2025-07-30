@@ -1,14 +1,19 @@
 defmodule VantageWeb.InvestigationLive.Index do
   use VantageWeb, :live_view
-
+  require Logger
   alias Vantage.Investigations
   alias Vantage.Investigations.Investigation
 
   @impl true
   def mount(_params, _session, socket) do
+    Logger.info(socket.assigns.current_user)
+
     {:ok,
      socket
-     |> stream(:investigations, Investigations.list_investigations())
+     |> stream(
+       :investigations,
+       Investigations.list_investigations(socket.assigns.current_user.id)
+     )
      |> assign(:timezone, "UTC")}
   end
 
@@ -71,7 +76,11 @@ defmodule VantageWeb.InvestigationLive.Index do
     {:noreply,
      socket
      |> assign(:timezone, timezone)
-     |> stream(:investigations, Investigations.list_investigations(), reset: true)}
+     |> stream(
+       :investigations,
+       Investigations.list_investigations(socket.assigns.current_user.id),
+       reset: true
+     )}
   end
 
   defp format_date(date, timezone) do

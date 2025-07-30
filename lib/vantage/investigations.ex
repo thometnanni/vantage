@@ -26,6 +26,79 @@ defmodule Vantage.Investigations do
     Repo.all(query)
   end
 
+  @doc """
+  Return the list of investigations a user has access to
+
+  ## Examples
+      iex> list_investigations(123)
+      [%Investigation{}, ...]
+
+
+  """
+
+  def list_investigations(user_id) do
+    allowed_roles = [:writer, :owner, :reader]
+
+    query =
+      from i in Investigation,
+        join: ic in InvestigationCollaborator,
+        on: ic.investigation_id == i.id,
+        where: ic.user_id == ^user_id and ic.role in ^allowed_roles,
+        order_by: [desc: i.updated_at],
+        select: i
+
+    Repo.all(query)
+  end
+
+  def get_user_role_for_investigation(user_id, investigation_id) do
+    InvestigationCollaborator
+    |> where([ic], ic.user_id == ^user_id and ic.investigation_id == ^investigation_id)
+    |> select([ic], ic.role)
+    |> Repo.one()
+  end
+
+  def get_user_roles_for_investigation(investigation_id) do
+    from(ic in InvestigationCollaborator,
+      join: u in assoc(ic, :user),
+      where: ic.investigation_id == ^investigation_id,
+      select: %{
+        user_id: u.id,
+        email: u.email,
+        role: ic.role,
+        investigation_collaborator_id: ic.id
+      }
+    )
+    |> Repo.all()
+  end
+
+  def remove_user_from_investigation(investigation_id, user_id) do
+    InvestigationCollaborator
+    |> where([ic], ic.investigation_id == ^investigation_id and ic.user_id == ^user_id)
+    |> Repo.delete_all()
+  end
+
+  def update_user_role_in_investigation(investigation_id, user_id, role) do
+    InvestigationCollaborator
+    |> where([ic], ic.investigation_id == ^investigation_id and ic.user_id == ^user_id)
+    |> Repo.update_all(set: [role: role])
+  end
+
+  def add_user_to_investigation(investigation_id, email) do
+    case Vantage.Accounts.get_user_by_email(email) do
+      nil ->
+        {:error, :user_not_found}
+
+      user ->
+        %InvestigationCollaborator{}
+        |> InvestigationCollaborator.changeset(%{
+          user_id: user.id,
+          investigation_id: investigation_id,
+          role: :reader
+        })
+        |> Repo.insert()
+    end
+  end
+
   @spec get_investigation!(any()) :: any()
   @doc """
   Gets a single investigation.

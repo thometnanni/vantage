@@ -16,20 +16,41 @@ defmodule VantageWeb.InvestigationLive.Edit do
   @impl true
   def mount(params, _session, socket) do
     id = params["id"]
-    investigation = Investigations.get_investigation!(id)
-    models = Models.list_models(id)
+    live_action = socket.assigns[:live_action] || :edit
 
-    projections =
-      Projections.list_projections_with_keyframes(id)
+    user_role =
+      Investigations.get_user_role_for_investigation(
+        socket.assigns.current_user.id,
+        id
+      )
 
-    {:ok,
-     socket
-     |> assign(:investigation, investigation)
-     |> assign(:models, models)
-     |> assign(:first_person, false)
-     |> assign(:use_coordinates, false)
-     |> assign(:time, 0.0)
-     |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
+    case user_role do
+      nil ->
+        # No access, redirect or show error
+        {:ok, push_navigate(socket, to: "/investigations", replace: true)}
+
+      :reader when live_action != :view ->
+        {:ok, push_navigate(socket, to: "/investigations/#{id}/view", replace: true)}
+
+      _role ->
+        # Allowed, continue as normal
+
+        investigation = Investigations.get_investigation!(id)
+        models = Models.list_models(id)
+
+        projections =
+          Projections.list_projections_with_keyframes(id)
+
+        {:ok,
+         socket
+         |> assign(:investigation, investigation)
+         |> assign(:models, models)
+         |> assign(:first_person, false)
+         |> assign(:use_coordinates, false)
+         |> assign(:user_role, user_role)
+         |> assign(:time, 0.0)
+         |> assign(:projections, projections), layout: {VantageWeb.Layouts, :full}}
+    end
   end
 
   @impl true
@@ -484,5 +505,9 @@ defmodule VantageWeb.InvestigationLive.Edit do
 
   defp degrees_to_radians(degrees) do
     degrees * :math.pi() / 180
+  end
+
+  def handle_info({:put_flash, kind, msg}, socket) do
+    {:noreply, put_flash(socket, kind, msg)}
   end
 end
