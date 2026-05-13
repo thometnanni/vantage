@@ -1,3 +1,4 @@
+
 <p align="center">
   <img align="center" src="https://github.com/user-attachments/assets/e15fa811-4d75-4658-9a2c-7618c05b9abf" height="150" alt="Vantage">
   <br>
@@ -13,9 +14,18 @@
 <br>
 <br>
 
+
+> ⚠️ We moved the development of vantage to a new repository, structured in sveltekit and based on the File System API to simplify mantainance and deployment [repository](https://github.com/v-a-n-t-a-g-e/vantage)
+
+<br>
+<br>
+
+
 <img width="49%" alt="Screenshot 2025-04-11 at 10 12 53" src="https://github.com/user-attachments/assets/7bb91296-b8eb-4df9-8316-930e99a37a2c" />
 <img width="49%" alt="Screenshot 2025-04-11 at 10 13 47" src="https://github.com/user-attachments/assets/2fe26a90-1a47-49c5-8c63-3b3ff7e89f8b" />
 
+
+> 
 ## License
 
 Vantage is open source, licensed under the MIT License.
